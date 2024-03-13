@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\NasabahController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/lab', [NasabahController::class, 'index']);
 
 Route::middleware([
     'auth:sanctum',
