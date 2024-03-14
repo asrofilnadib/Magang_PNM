@@ -64,6 +64,8 @@
 <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js" integrity="sha384-SPk3tZAuc5BM+V5Sv8r+pqJSwOlfN1d0uo8jNFmS+Kcg0XKuU5lk5jvh0KIbNdY6" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js" integrity="sha384-4ywBf3yIFVp90sCqLnRBMEXLmtkISOn8tGEtQqF8C2xKd4LoThR3Pn6pRfoadG3S" crossorigin="anonymous"></script>
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
