@@ -67,41 +67,46 @@
 
               <div class="card-body">
                 <h5 class="card-title">Tabel Nasabah</h5>
-
-                <table class="table table-bordered datatable">
-                <thead>
-                <tr>
-                  <th>ID Nasabah</th>
-                  <th>ID Loan</th>
-                  <th>Siklus</th>
-                  <th>Tanggal Pencairan</th>
-                  <th>Nama File</th>
-                  <th>Tanggal Mulai GP</th>
-                  <th>Tanggal Berakhir GP</th>
-                  <th>Status Eksekusi TIF</th>
-                  <th>Tanggal Eksekusi</th>
-                  <th>Tanggal Mulai GP Penyesuaian</th>
-                  <th>Tanggal Berakhir Penyesuaian</th>
-                  <th>Status Penyesuaian</th>
-                </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row"><a href="#">#2147</a></th>
-                    <td>Bridie Kessler</td>
-                    <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                    <td>$47</td>
-                    <td>Status Eksekusi TIF</td>
-                    <td>Tanggal Mulai GP</td>
-                    <td>Tanggal Berakhir GP</td>
-                    <td><span class="badge bg-primary">Sesuai</span></td>
-                    <td>Tanggal Eksekusi</td>
-                    <td>Tanggal Mulai GP Penyesuaian</td>
-                    <td>Tanggal Berakhir Penyesuaian</td>
-                    <td>Status Penyesuaian</td>
-                  </tr>
-                </tbody>
-                </table>
+                <div class="responsive">
+                  <table class="table table-bordered datatable">
+                    <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>ID Nasabah</th>
+                      <th>ID Loan</th>
+                      <th>Siklus</th>
+                      <th>Tanggal Pencairan</th>
+                      <th>Nama File</th>
+                      <th>Tanggal Mulai GP</th>
+                      <th>Tanggal Berakhir GP</th>
+                      <th>Status Eksekusi TIF</th>
+                      <th>Tanggal Eksekusi</th>
+                      <th>Tanggal Mulai GP Penyesuaian</th>
+                      <th>Tanggal Berakhir Penyesuaian</th>
+                      <th>Status Penyesuaian</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($nasabah as $klien)
+                      <tr>
+                        <th class="bold">{{ $klien->id }}</th>
+                        <th scope="row"><a href="#">{{ $klien->NasabahId }}</a></th>
+                        <td>{{ $klien->LoanId }}</td>
+                        <td><a href="#" class="text-primary">{{ $klien->Siklus }}</a></td>
+                        <td>{{ $klien->TanggalPencairan}}</td>
+                        <td>Status Eksekusi TIF</td>
+                        <td>Tanggal Mulai GP</td>
+                        <td>Tanggal Berakhir GP</td>
+                        <td><span class="badge bg-primary">Sesuai</span></td>
+                        <td>Tanggal Eksekusi</td>
+                        <td>Tanggal Mulai GP Penyesuaian</td>
+                        <td>Tanggal Berakhir Penyesuaian</td>
+                        <td>Status Penyesuaian</td>
+                      </tr>
+                    @endforeach
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div><!-- End Table -->
