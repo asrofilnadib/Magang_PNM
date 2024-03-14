@@ -12,7 +12,7 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Table with hoverable rows</h5>
+              <h5 class="card-title">Table Data Nasabah</h5>
 
               <!-- Table with hoverable rows -->
               <div class="responsive">
@@ -54,7 +54,7 @@
 
       <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Small tables</h5>
+            <h5 class="card-title">Tabel Nama File</h5>
             <!-- Small tables -->
             <div class="responsive">
                 <table class="table table-sm display" id="smTable">
