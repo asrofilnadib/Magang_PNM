@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Documents;
 use App\Models\Nasabah;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,10 @@ class NasabahController extends Controller
 
     public function tableNasabah()
     {
-      return view('tables');
+      return view('tables', [
+        'nasabah' => Nasabah::all(),
+        'dokumen' => Documents::all()
+      ]);
     }
 
     public function formatData($nasabah)

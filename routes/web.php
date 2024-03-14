@@ -3,9 +3,9 @@
 use App\Http\Controllers\NasabahController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+/*Route::get('/', function () {
   return view('welcome');
-});
+});*/
 
 Route::middleware([
   'auth:sanctum',
@@ -16,7 +16,7 @@ Route::middleware([
     return view('dashboard');
   })->name('dashboard');
 
-  Route::get('/lab', [NasabahController::class, 'index']);
+  Route::get('/', [NasabahController::class, 'index']);
 
   Route::get('/nasabah', [NasabahController::class, 'tableNasabah']);
 });
