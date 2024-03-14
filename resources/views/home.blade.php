@@ -28,6 +28,7 @@
   <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
@@ -151,25 +152,12 @@
       <div class="col-lg-8">
         <div class="row">
 
-          <!-- Sales Card -->
-          <div class="col-6">
+          <!-- Total Nasabah -->
+          <div class="col-4">
             <div class="card info-card sales-card">
 
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
               <div class="card-body">
-                <h5 class="card-title">Nasabah</h5>
+                <h5 class="card-title">Total Nasabah</h5>
 
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -182,7 +170,33 @@
               </div>
 
             </div>
-          </div><!-- End Sales Card -->
+          </div><!-- Total Nasabah -->
+
+        <div class="col-8">
+        <div class="card info-card sales-card">
+            <div class="card-body">
+            <h5 class="card-title">Nasabah</h5>
+
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-people"></i>
+                </div>
+                <div class="ps-3">
+                <!-- Dropdown filter input -->
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Filter
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                    <li><input class="dropdown-item" type="text" placeholder="Type filter here..." id="filterInput" oninput="filterData(this.value)"></li>
+                    <!-- Add more dropdown items if needed -->
+                    </ul>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div><!-- End Sales Card -->
 
           <!-- Recent Sales -->
           <div class="col-12">
