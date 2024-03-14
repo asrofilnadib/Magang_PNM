@@ -39,31 +39,27 @@
             </div>
           </div><!-- Total Nasabah -->
 
-        <div class="col-8">
-        <div class="card info-card sales-card">
-            <div class="card-body">
-            <h5 class="card-title">Nasabah</h5>
-
-            <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                <i class="bi bi-people"></i>
-                </div>
-                <div class="ps-3">
-                <!-- Dropdown filter input -->
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Filter
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-                    <li><input class="dropdown-item" type="text" placeholder="Type filter here..." id="filterInput" oninput="filterData(this.value)"></li>
-                    <!-- Add more dropdown items if needed -->
-                    </ul>
-                </div>
-                </div>
-            </div>
-            </div>
+          <div class="col-8">
+  <div class="card info-card sales-card">
+    <div class="card-body">
+      <h5 class="card-title">Nama File</h5>
+      <div class="d-flex align-items-center">
+        <div class="ps-3">
+          <div class="input-group">
+            <input class="form-control" type="text" list="fileNames" placeholder="Pilih Nama File..." aria-label="Filter by file name">
+            <datalist id="fileNames">
+              <option value="M.96.PNM.LBS.II.23M.035.PNM.PBI.5.I.23.xls">M.96.PNM.LBS.II.23M.035.PNM.PBI.5.I.23.xls</option>
+              <option value="NM.150.PNM.LBS.II.23--M.029.PNM.PBI4.II.23.xlsx">NM.150.PNM.LBS.II.23--M.029.PNM.PBI4.II.23.xlsx</option>
+              </datalist>
+            <button class="btn btn-primary" onclick="filterData()">Cari</button>
+          </div>
         </div>
-        </div><!-- End Sales Card -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
           <!-- Recent Sales -->
           <div class="col-12">
