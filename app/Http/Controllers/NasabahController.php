@@ -23,6 +23,11 @@ class NasabahController extends Controller
         ]);
     }
 
+    public function tableNasabah()
+    {
+      return view('tables');
+    }
+
     public function formatData($nasabah)
     {
         $sesuai = 0;
