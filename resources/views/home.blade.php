@@ -48,11 +48,11 @@
                       <!-- Filter inputs -->
                       <div class="input-group">
                         <select class="form-select" id="filterInput">
-                          <form action="" method="get"></form>
+                          <form action="#" method="get"></form>
                           <option selected disabled>Pilih Nama File...</option>
                           @foreach($nasabah as $klien)
-                            <option value="M.96.PNM.LBS.II.23M.035.PNM.PBI.5.I.23.xls">
-                              M.96.PNM.LBS.II.23M.035.PNM.PBI.5.I.23.xls
+                            <option value="{{ $klien->NamaFile }}">
+                              {{ $klien->NamaFile }}
                             </option>
                           @endforeach
                           <!-- Add more options if needed -->
@@ -89,9 +89,23 @@
                     @foreach($nasabah as $klien)
                       <tr>
                         <th class="bold">{{ $klien->id }}</th>
-                        <th scope="row"><a href="/nasabah/{{ $klien->NasabahId }}">{{ $klien->NasabahId }}</a></th>
-                        <td><span class="badge bg-primary">{{ $klien->StatusEksekusiTIF }}</span></td>
-                        <td><span class="badge bg-primary">{{ $klien->Status }}</span></td>
+                        <th scope="row"><a class="hover:text-blue-500" href="/nasabah/{{ $klien->NasabahId }}">{{ $klien->NasabahId }}</a></th>
+                        <td class="text-center">
+                          @if($klien->StatusEksekusiTIF == "Sesuai")
+                            <span class="badge bg-success">{{ $klien->StatusEksekusiTIF }}</span>
+                          @elseif($klien->StatusEksekusiTIF == "Modifikasi")
+                            <span class="badge bg-warning">{{ $klien->StatusEksekusiTIF }}</span>
+                          @endif
+                        </td>
+                        <td class="text-center">
+                          @if($klien->Status == "Masih Ada Jadwal")
+                            <span class="badge bg-primary">{{ $klien->Status }}</span>
+                          @elseif($klien->Status == "Pembiayaan Lunas")
+                            <span class="badge bg-success">{{ $klien->Status }}</span>
+                          @elseif($klien->Status == "Tidak Ada Jadwal")
+                            <span class="badge bg-secondary">{{ $klien->Status }}</span>
+                          @endif
+                        </td>
                         <td><a>{{ $klien->StartingDateGP }}</a></td>
                         <td><a>{{ $klien->EndDateGP }}</a></td>
                       </tr>
@@ -221,9 +235,8 @@
         </div><!-- Status Penyesuaian -->
 
       </div><!-- End Right side columns -->
-
-      </div>
     </section>
-
   </main><!-- End #main -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 @endsection

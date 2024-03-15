@@ -39,7 +39,7 @@ class NasabahFactory extends Factory
             'EndDateGP_Penyesuaian' => $this->faker->dateTimeBetween('2023-01-01', '2023-12-31')->format('Y-m-d'),
             'Status' => $this->faker->randomElement([
                 'Tidak Ada Jadwal',
-                'Masih ada Jadwal',
+                'Masih Ada Jadwal',
                 'Pembiayaan Lunas',
             ])
         ];
