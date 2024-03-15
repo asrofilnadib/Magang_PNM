@@ -59,15 +59,15 @@ class DocumentsFactory extends Factory
         $NoMemoAsal1 = $this->faker->randomElement(['PBM1', 'PBM2', 'PBM3', 'PBI1', 'PBI2', 'PBI3', 'PBI4', 'BUM1', 'BUM2', 'BUM3']);
 
         return [
-//            'Id' => $this->faker->numberBetween(134, 406),
-            'NamaFile' => $this->faker->sentence(2) . 'pdf' ,
+            'Id' => $this->faker->unique()->numberBetween(134, 406),
+            'NamaFile' => $this->faker->numerify('M.##.PNM.LBS.II.23M.###.PNM.PBI.' . $DivisionNumber . '.I.23.xls'),
             'TanggalTerima' => $this->faker->dateTimeBetween('2022-01-01', '2023-12-31')->format('Y-m-d'),
-            'DivisiAsal' => $Division.' '.$DivisionNumber,
-            'NoMemoAsal' => $this->faker->numerify('M-###/PNM-'.$Surat.'/'.$Romawi.'/'.$Years),
-            'PerihalMemoAsal' => 'Pengajuan Grace Period Kondisi Tertentu '.$PerihalMemoOBS1.$PerihalMemoOBS,
+            'DivisiAsal' => $Division . ' ' . $DivisionNumber,
+            'NoMemoAsal' => $this->faker->numerify('M-###/PNM-' . $Surat . '/' . $Romawi . '/' . $Years),
+            'PerihalMemoAsal' => 'Pengajuan Grace Period Kondisi Tertentu ' . $PerihalMemoOBS1 . $PerihalMemoOBS,
             'TanggalKirim' => $this->faker->dateTimeBetween('2020-01-01', '2021-12-31')->format('Y-m-d'),
-            'NoMemoOBS' => $this->faker->numerify('M-####/PNM-'.$NoMemoAsal1.'/'.$Romawi.'/'.$Years),
-            'PerihalMemoOBS' => 'Pengajuan Grace Period Kondisi Tertentu '.$PerihalMemoOBS1.$PerihalMemoOBS,
+            'NoMemoOBS' => $this->faker->numerify('M-####/PNM-' . $NoMemoAsal1 . '/' . $Romawi . '/' . $Years),
+            'PerihalMemoOBS' => 'Pengajuan Grace Period Kondisi Tertentu ' . $PerihalMemoOBS1 . $PerihalMemoOBS,
             'NoTiket' => $this->faker->numerify('T-###-PNM'),
             'StatusTiket' => 'Belum Kirim Ticket',
             'JenisGP' => $this->faker->randomElement(['bencana', 'bencana', 'bencana', 'bencana', 'bencana', 'hari raya', 'covid']),

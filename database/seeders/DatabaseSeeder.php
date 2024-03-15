@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);*/
 
-        Nasabah::factory()->count(64)->create();
+        // Documents::factory(272)->create();
 
-        Documents::factory(50)->create();
+        Nasabah::factory()->count(200)->create();
 
-        User::factory(15)->create();
+        // User::factory(15)->create();
     }
 }
