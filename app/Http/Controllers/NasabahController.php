@@ -54,4 +54,13 @@ class NasabahController extends Controller
 
     return json_encode($data);
   }
+
+  public function show($idNasabah)
+  {
+    $nasabah = Nasabah::where('NasabahId', $idNasabah)->first();
+
+    return view('nasabah.show', [
+      'nasabah' => $nasabah
+    ]);
+  }
 }

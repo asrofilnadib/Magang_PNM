@@ -16,7 +16,10 @@ Route::middleware([
     return view('dashboard');
   })->name('dashboard');
 
-  Route::get('/', [NasabahController::class, 'index']);
+  Route::get('/', [NasabahController::class, 'index'])
+    ->name('nasabah.index');
+  Route::get('/nasabah/{NasabahId}', [NasabahController::class, 'show'])
+    ->name('nasabah.show');
 
   Route::get('/nasabah', [NasabahController::class, 'tableNasabah']);
 });

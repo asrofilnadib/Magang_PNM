@@ -56,19 +56,14 @@
         <div class="card-body">
             <h5 class="card-title">Tabel Nama File</h5>
             <!-- Small tables -->
-            <div class="responsive">
+            <div class="table-responsive">
                 <table class="table table-sm display" id="smTable">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>#</th>
                             <th>Nama File</th>
-                            <th>Tanggal Terima</th>
-                            <th>Divisi Asal</th>
                             <th>No.Memo Asal</th>
-                            <th>Perihal Memo Asal</th>
-                            <th>Tanggal Kirim</th>
                             <th>No.Memo OBS</th>
-                            <th>Perihal Memo OBS</th>
                             <th>No.Tiket</th>
                             <th>Status Tiket</th>
                             <th>Jenis GP</th>
@@ -79,14 +74,9 @@
                     <tr>
                       <th scope="row">{{ $doc->Id }}</th>
                       <th scope="row"><a href="#">{{ $klien->NamaFile }}</a></th>
-                      <td>{{ $doc->TanggalTerima }}</td>
-                      <td>{{ $doc->DivisiAsal }}</td>
                       <td>{{ $doc->NoMemoAsal }}</td>
-                      <td>{{ $doc->PerihalMemoAsal }}</td>
-                      <td>{{ $doc->TanggalKirim }}</td>
-                      <td>{{ $doc->NoMemoOBS }}</td>
-                      <td>{{ $doc->PerihalMemoOBS }}</td>
                       <td>{{ $doc->NoTiket }}</td>
+                      <td>{{ $doc->NoMemoOBS }}</td>
                       <td><span class="badge bg-primary">{{ $doc->StatusTiket }}</span></td>
                       <td>{{ $doc->JenisGP }}</td>
                     </tr>
@@ -109,7 +99,9 @@
   <script>
     $(document).ready( function () {
       $('#hoverTable').DataTable();
-      $('#smTable').DataTable();
+      $('#smTable').DataTable({
+        'pageLength': 5,
+      });
     });
   </script>
   {{--Datatables JQuery--}}
