@@ -46,7 +46,8 @@
                 <!-- Dropdown -->
                 <div class="w-full sm:w-auto">
                   <label for="filter" class="block text-sm font-medium text-gray-700">Filter</label>
-                  <select id="filter" name="filter" class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md form-control">
+                  <select id="filter" name="filter"
+                          class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md form-control">
                     <option id="180">{{ \App\Models\Documents::findOrFail(180)->NamaFile }}</option>
                     <option id="204">{{ \App\Models\Documents::findOrFail(204)->NamaFile }}</option>
                   </select>
@@ -55,18 +56,23 @@
                 <!-- Tanggal Dari -->
                 <div class="w-full sm:w-auto">
                   <label for="from" class="block text-sm font-medium text-gray-700">Tanggal Dari</label>
-                  <input type="date" id="from" name="from" class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                  <input type="date" id="from" name="from"
+                         class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                 </div>
 
                 <!-- Tanggal Sampai -->
                 <div class="w-full sm:w-auto">
                   <label for="to" class="block text-sm font-medium text-gray-700">Tanggal Sampai</label>
-                  <input type="date" id="to" name="to" class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                  <input type="date" id="to" name="to"
+                         class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                 </div>
 
                 <!-- Tombol Filter -->
                 <div class="w-full sm:w-auto">
-                  <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onclick="getData()">Filter</button>
+                  <button type="button"
+                          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onclick="getData()">Filter
+                  </button>
                 </div>
               </div>
 
@@ -152,7 +158,7 @@
               </div>
             </div><!-- End Table -->
 
-            <div class="col-lg-12">
+            {{--<div class="col-lg-12">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Bar CHart</h5>
@@ -160,54 +166,51 @@
                   <!-- Bar Chart -->
                   <canvas id="barChart" style="max-height: 400px;"></canvas>
                   <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new Chart(document.querySelector('#barChart'), {
-                        type: 'bar',
-                        data: {
-                          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                          datasets: [{
-                            label: 'Bar Chart',
-                            data: [65, 59, 80, 81, 56, 55, 40],
-                            backgroundColor: [
-                              'rgba(255, 99, 132, 0.2)',
-                              'rgba(255, 159, 64, 0.2)',
-                              'rgba(255, 205, 86, 0.2)',
-                            ],
-                            borderColor: [
-                              'rgb(255, 99, 132)',
-                              'rgb(255, 159, 64)',
-                              'rgb(255, 205, 86)',
-                            ],
-                            borderWidth: 1
-                          }]
-                        },
-                        options: {
-                          scales: {
-                            y: {
-                              beginAtZero: true
-                            }
-                          }
-                        }
-                      });
-                    });
-                  </script>
-                  <script>
                     function getData() {
                       var filter = document.getElementById('filter')
                       var dateFrom = document.getElementById('from')
                       var dateTo = document.getElementById('to')
 
                       $.ajax({
-                        url: '/',
+                        url: '{{ route('nasabah.index') }}',
                         method: 'GET',
                         dataType: 'json',
                         data: {
-                          'country': $('#country').val(),
+                          'filter': $('#filter').val(),
                           'from': $('#from').val(),
                           'to': $('#to').val()
                         },
                         success: function ($data) {
-                          const data = $data.nasabah
+                          document.addEventListener("DOMContentLoaded", () => {
+                            new Chart(document.querySelector('#barChart'), {
+                              type: 'bar',
+                              data: {
+                                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                                datasets: [{
+                                  label: 'Bar Chart',
+                                  data: [65, 59, 80, 81, 56, 55, 40],
+                                  backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 205, 86, 0.2)',
+                                  ],
+                                  borderColor: [
+                                    'rgb(255, 99, 132)',
+                                    'rgb(255, 159, 64)',
+                                    'rgb(255, 205, 86)',
+                                  ],
+                                  borderWidth: 1
+                                }]
+                              },
+                              options: {
+                                scales: {
+                                  y: {
+                                    beginAtZero: true
+                                  }
+                                }
+                              }
+                            });
+                          });
                         },
                         error: function ($data) {
                         }
@@ -218,7 +221,7 @@
 
                 </div>
               </div>
-            </div>
+            </div>--}}
 
           </div>
         </div><!-- End Left side columns -->
@@ -226,58 +229,43 @@
         <!-- Right side columns -->
         <div class="col-lg-4">
 
-          <!-- Status Eksekusi TIF -->
           <div class="card">
-            <div class="card-body pb-0">
-              <h5 class="card-title">Status Eksekusi <span>| TIF</span></h5>
-              <div id="trafficChart1" style="min-height: 400px;" class="echart"></div>
+            <div class="card-body">
+              <h5 class="card-title">Doughnut Chart</h5>
 
+              <!-- Doughnut Chart -->
+              <canvas id="doughnutChart" style="max-height: 400px;"></canvas>
               <script>
                 document.addEventListener("DOMContentLoaded", () => {
                   const data = JSON.parse(`<?php echo $status ?>`)
-                  echarts.init(document.querySelector("#trafficChart1")).setOption({
-                    tooltip: {
-                      trigger: 'item'
-                    },
-                    legend: {
-                      top: '5%',
-                      left: 'center'
-                    },
-                    series: [{
-                      name: 'Access From',
-                      type: 'pie',
-                      radius: ['40%', '70%'],
-                      avoidLabelOverlap: false,
-                      label: {
-                        show: false,
-                        position: 'center'
-                      },
-                      emphasis: {
-                        label: {
-                          show: true,
-                          fontSize: '18',
-                          fontWeight: 'bold'
-                        }
-                      },
-                      labelLine: {
-                        show: false
-                      },
-                      data: [{
-                        value: data.data[0],
-                        name: data.label[0]
-                      },
-                        {
-                          value: data.data[1],
-                          name: data.label[1]
-                        },
-                      ]
-                    }]
+                  new Chart(document.querySelector('#doughnutChart'), {
+                    type: 'doughnut',
+                    data: {
+                      labels: [
+                        'Sesuai',
+                        'Modifikasi',
+                      ],
+                      datasets: [{
+                        label: [
+                        ],
+                        data: [
+                          data.data[0],
+                          data.data[1],
+                        ],
+                        backgroundColor: [
+                          'rgb(255, 99, 132)',
+                          'rgb(54, 162, 235)',
+                        ],
+                        hoverOffset: 4
+                      }]
+                    }
                   });
                 });
               </script>
+              <!-- End Doughnut CHart -->
 
             </div>
-          </div><!-- Status Eksekusi TIF -->
+          </div>
 
           <div class="col-lg-12">
             <div class="card">

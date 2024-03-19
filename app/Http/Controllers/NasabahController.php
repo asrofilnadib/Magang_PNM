@@ -18,7 +18,7 @@ class NasabahController extends Controller
       ->limit(20)
       ->get();
 
-    $this->nasabah = $this->formatData($nasabah);
+    $this->nasabah = $this->statusEksekusiTIF($nasabah);
     $status = $this->polarAreaChart($nasabah);
     $filter = $this->filterData(request());
 //        dd($this->nasabah);
@@ -39,7 +39,7 @@ class NasabahController extends Controller
     ]);
   }
 
-  public function formatData($nasabah)
+  public function statusEksekusiTIF($nasabah)
   {
     $sesuai = 0;
     $modifikasi = 0;
