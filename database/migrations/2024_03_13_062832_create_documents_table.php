@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('documents', function (Blueprint $table) {
-            $table->id('Id')->nullable()->unique();
+            $table->id();
             $table->string('NamaFile', 255);
             $table->date('TanggalTerima')->nullable();
             $table->string('DivisiAsal', 100)->nullable();

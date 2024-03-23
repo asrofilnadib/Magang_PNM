@@ -20,6 +20,8 @@ Route::middleware([
     ->name('nasabah.index');
   Route::get('/nasabah/{NasabahId}', [NasabahController::class, 'show'])
     ->name('nasabah.show');
+  Route::get('/nasabah/update', [NasabahController::class, 'filteredData'])
+    ->name('nasabah.update');
 
   Route::get('/nasabah', [NasabahController::class, 'tableNasabah']);
 });

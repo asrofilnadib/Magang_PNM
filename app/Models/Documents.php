@@ -16,4 +16,8 @@ class Documents extends Model
         $this->belongsTo(User::class);
     }
 
+    public function nasabah()
+    {
+      return $this->hasMany(Nasabah::class);
+    }
 }

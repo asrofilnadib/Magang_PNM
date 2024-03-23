@@ -16,8 +16,8 @@ class Nasabah extends Model
         $this->belongsTo(User::class);
     }
 
-    public function dokumen()
+    public function document()
     {
-        $this->belongsTo(Documents::class);
+        return $this->belongsTo(Documents::class, 'namaFile_id');
     }
 }

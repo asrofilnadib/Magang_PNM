@@ -33,7 +33,7 @@
                     {{ $nasabah->LoanId }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Status Penyesuaian</label>
@@ -42,7 +42,7 @@
                     {{ $nasabah->Status }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Status Eksekusi TIF</label>
@@ -60,7 +60,7 @@
                     {{ $nasabah->StartingDateGP }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">End Date GP</label>
@@ -69,7 +69,7 @@
                     {{ $nasabah->EndDateGP }}
                   </div>
                 </div>
-                
+
               </form><!-- End General Form Elements -->
 
             </div>
@@ -86,13 +86,13 @@
               <form>
                 <div class="row mb-3">
                   <div class="col-lg-12">
-                    <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Nama FIle</label>
+                    <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Nama File</label>
                   </div>
                   <div class="w-auto font-normal font-sans">
-                    {{ $nasabah->NamaFile }}
+                    {{ $nasabah->document->NamaFile }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Siklus</label>
@@ -110,7 +110,7 @@
                     {{ $nasabah->TanggalPencairan }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Tanggal Pencairan Value</label>
@@ -119,7 +119,7 @@
                     {{ $nasabah->TanggalPencairanValue }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Date Eksekusi TIF</label>
@@ -128,7 +128,7 @@
                     {{ $nasabah->DateEksekusiTIF }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Starting Date GP (Penyesuaian)</label>
@@ -137,7 +137,7 @@
                     {{ $nasabah->StartingDateGP_Penyesuaian }}
                   </div>
                 </div>
-                
+
                 <div class="row mb-3">
                   <div class="col-lg-12">
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">End Date GP (Penyesuaian)</label>

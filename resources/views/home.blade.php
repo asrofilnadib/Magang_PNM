@@ -1,16 +1,10 @@
-{{--@dd($filters)--}}
+{{--@dd($nasabah->where('namaFile_id')->first()->StartingDateGP))--}}
 @extends('layouts.main')
 @section('content')
   <main id="main" class="main">
 
-    <div class="pagetitle">
+    <div class="pagetitle mb-4">
       <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
@@ -20,234 +14,201 @@
         <div class="col-lg-8">
           <div class="row">
 
-            <!-- Total Nasabah -->
-            <div class="col-4">
+            <!-- Filter Card -->
+            <div class="col-xxl-8 col-xl-10">
+
+              <div class="card info-card customers-card">
+
+                  {{-- Form for Filtering --}}
+                <div class="card-body">
+                    <form method="GET" action="{{ route('nasabah.index') }}">
+                      @csrf
+                      <div class="row">
+                        <div class="col-6">
+                          <h4 class="card-title">Tanggal Dari</h4>
+                          <input type="date" id="from" class="form-control" name="from" @if(request('nama_file'))
+                            value="{{ old('from', $nasabah->where('namaFile_id', request('nama_file'))->first()->StartingDateGP) }}"
+                          @endif>
+                        </div>
+                        <div class="col-6">
+                          <h4 class="card-title">Tanggal Sampai</h4>
+                          <input type="date" id="to" class="form-control" name="to" @if(request('nama_file'))
+                            value="{{ old('to', $nasabah->first()->max('endDateGP')) }}"
+                            @endif>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                          <h4 class="card-title">Nama File</h4>
+                          <div class="col">
+                            <select class="form-select" aria-label="Nama File" name="nama_file"
+                                    required>
+                              <option selected >Semua File</option>
+                              <option
+                                value="{{ $doc180->id }}"> {{ $doc180->NamaFile }}</option>
+                              <option value="{{ $doc204->id }}"> {{ $doc204->NamaFile }}</option>
+                            </select>
+                          </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                          <button type="submit" name="search"
+                                  class="btn btn-dark d-md-flex justify-content-md-end"><i
+                              class="bi bi-search me-1"></i> Search
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+              </div>
+
+            </div><!-- End Filter Card -->
+
+            <!-- NOA Card -->
+            <div class="col-xxl-4 col-md-6">
               <div class="card info-card sales-card">
 
                 <div class="card-body">
-                  <h5 class="card-title">Total Nasabah</h5>
+                  <h5 class="card-title">Total Nasabah <br>
+                  </h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>{{ $sumNasabah }}</h6>
+                      <h6>
+                        {{ $sumNasabah }}
+                      </h6>
                     </div>
                   </div>
                 </div>
 
               </div>
-            </div><!-- Total Nasabah -->
+            </div><!-- End NOA Card -->
 
-            {{-- Filters --}}
-            <div class="col-8">
-              <div class="flex flex-wrap justify-between items-center space-y-4 sm:space-y-0">
-                <!-- Dropdown -->
-                <div class="w-full sm:w-auto">
-                  <label for="filter" class="block text-sm font-medium text-gray-700">Filter</label>
-                  <select id="filter" name="filter"
-                          class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md form-control">
-                    <option id="180">{{ \App\Models\Documents::findOrFail(180)->NamaFile }}</option>
-                    <option id="204">{{ \App\Models\Documents::findOrFail(204)->NamaFile }}</option>
-                  </select>
-                </div>
-
-                <!-- Tanggal Dari -->
-                <div class="w-full sm:w-auto">
-                  <label for="from" class="block text-sm font-medium text-gray-700">Tanggal Dari</label>
-                  <input type="date" id="from" name="from"
-                         class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                </div>
-
-                <!-- Tanggal Sampai -->
-                <div class="w-full sm:w-auto">
-                  <label for="to" class="block text-sm font-medium text-gray-700">Tanggal Sampai</label>
-                  <input type="date" id="to" name="to"
-                         class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                </div>
-
-                <!-- Tombol Filter -->
-                <div class="w-full sm:w-auto">
-                  <button type="button"
-                          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onclick="getData()">Filter
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="col-8">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                  <h5 class="card-title">Nama File</h5>
-                  <div class="d-flex align-items-center">
-                    <div class="ps-3">
-                      <!-- Filter inputs -->
-                      <div class="input-group">
-                        <select class="form-select" id="filterInput">
-                          <form action="" method="get">
-                            <option selected disabled>Pilih Nama File...</option>
-                            <option value="{{ \App\Models\Documents::findOrFail(180) }}">
-                              {{ \App\Models\Documents::findOrFail(180) }}
-                            </option>
-                            <option value="{{ \App\Models\Documents::findOrFail(204) }}">
-                              {{ \App\Models\Documents::findOrFail(204) }}
-                            </option>
-                            <!-- Add more options if needed -->
-                          </form>
-                        </select>
-                        <button class="btn btn-primary" onclick="filterData()">Cari</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- Filter Data -->
-
-
-            <!-- Tabel Nasabah -->
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-                <div class="responsive">
-                  <div class="card-body">
-                    <h5 class="card-title">Tabel Nasabah</h5>
-                  </div>
-
-                  <table class="table table-bordered datatable">
-                    <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>ID Nasabah</th>
-                      <th>Status Eksekusi TIF</th>
-                      <th>Status Penyesuaian</th>
-                      <th>Starting Date GP</th>
-                      <th>End Gate GP</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($nasabah as $klien)
-                      <tr>
-                        <th class="bold">{{ $klien->id }}</th>
-                        <th scope="row"><a href="/nasabah/{{ $klien->NasabahId }}">{{ $klien->NasabahId }}</a></th>
-                        <td class="text-center">
-                          @if($klien->StatusEksekusiTIF == "Sesuai")
-                            <span class="badge bg-success">{{ $klien->StatusEksekusiTIF }}</span>
-                          @elseif($klien->StatusEksekusiTIF == "Modifikasi")
-                            <span class="badge bg-warning">{{ $klien->StatusEksekusiTIF }}</span>
-                          @endif
-                        </td>
-                        <td class="text-center">
-                          @if($klien->Status == "Masih Ada Jadwal")
-                            <span class="badge bg-primary">{{ $klien->Status }}</span>
-                          @elseif($klien->Status == "Pembiayaan Lunas")
-                            <span class="badge bg-success">{{ $klien->Status }}</span>
-                          @elseif($klien->Status == "Tidak Ada Jadwal")
-                            <span class="badge bg-secondary">{{ $klien->Status }}</span>
-                          @endif
-                        </td>
-                        <td><a>{{ $klien->StartingDateGP }}</a></td>
-                        <td><a>{{ $klien->EndDateGP }}</a></td>
-                      </tr>
-                    @endforeach
-                    </tbody>
-                  </table>
-                </div>
-                {{-- <x-filter _/> --}}
-              </div>
-            </div><!-- End Table -->
-
-            {{--<div class="col-lg-12">
+            <div class="col-lg-12">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Bar CHart</h5>
+                  <h5 class="card-title">Status TIF X Status Pembiayaan</h5>
 
-                  <!-- Bar Chart -->
-                  <canvas id="barChart" style="max-height: 400px;"></canvas>
+                  <!-- Vertical Bar Chart -->
+                  <div id="verticalBarChart" style="min-height: 300px;" class="echart"></div>
+
                   <script>
-                    function getData() {
-                      var filter = document.getElementById('filter')
-                      var dateFrom = document.getElementById('from')
-                      var dateTo = document.getElementById('to')
+                    document.addEventListener("DOMContentLoaded", () => {
+                      const label = JSON.parse(`<?php echo $statusTIFPembiayaan?>`)
+                      const data = JSON.parse(`<?php echo $statusPembiayaan ?>`)
+                      console.log(label)
+                      console.log(data)
 
-                      $.ajax({
-                        url: '{{ route('nasabah.index') }}',
-                        method: 'GET',
-                        dataType: 'json',
-                        data: {
-                          'filter': $('#filter').val(),
-                          'from': $('#from').val(),
-                          'to': $('#to').val()
+                      console.log(data.label[0])
+
+                      echarts.init(document.querySelector("#verticalBarChart")).setOption({
+                        tooltip: {
+                          trigger: 'axis',
+                          axisPointer: {
+                            type: 'shadow'
+                          }
                         },
-                        success: function ($data) {
-                          document.addEventListener("DOMContentLoaded", () => {
-                            new Chart(document.querySelector('#barChart'), {
-                              type: 'bar',
-                              data: {
-                                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                                datasets: [{
-                                  label: 'Bar Chart',
-                                  data: [65, 59, 80, 81, 56, 55, 40],
-                                  backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)',
-                                    'rgba(255, 205, 86, 0.2)',
-                                  ],
-                                  borderColor: [
-                                    'rgb(255, 99, 132)',
-                                    'rgb(255, 159, 64)',
-                                    'rgb(255, 205, 86)',
-                                  ],
-                                  borderWidth: 1
-                                }]
-                              },
-                              options: {
-                                scales: {
-                                  y: {
-                                    beginAtZero: true
-                                  }
-                                }
-                              }
-                            });
-                          });
+                        legend: {
+                          data: ['Sesuai', 'Modifikasi']
                         },
-                        error: function ($data) {
-                        }
-                      })
-                    }
+                        grid: {
+                          left: '3%',
+                          right: '4%',
+                          bottom: '3%',
+                          containLabel: true
+                        },
+                        xAxis: [
+                          {
+                            type: 'value'
+                          }
+                        ],
+                        yAxis: [
+                          {
+                            type: 'category',
+                            axisTick: {
+                              show: false
+                            },
+                            data: [
+                              data.label[0],
+                              data.label[1],
+                              data.label[2],
+                            ]
+                          }
+                        ],
+                        series: [
+                          {
+                            name: 'Sesuai',
+                            type: 'bar',
+                            label: {
+                              show: true,
+                              position: 'inside'
+                            },
+                            emphasis: {
+                              focus: 'series'
+                            },
+                            data: [
+                              label[0].Tidak.sesuai,
+                              label[0].Masih.sesuai,
+                              label[0].Pembiayaan.sesuai
+                            ]
+                          },
+                          {
+                            name: 'Modifikasi',
+                            type: 'bar',
+                            stack: 'Total',
+                            label: {
+                              show: true
+                            },
+                            emphasis: {
+                              focus: 'series'
+                            },
+                            data: [
+                              label[0].Tidak.modifikasi,
+                              label[0].Masih.modifikasi,
+                              label[0].Pembiayaan.modifikasi,
+                            ]
+                          },
+                        ]
+                      });
+                    });
                   </script>
-                  <!-- End Bar CHart -->
+                  <!-- End Vertical Bar Chart -->
 
                 </div>
               </div>
-            </div>--}}
-
+            </div>
           </div>
         </div><!-- End Left side columns -->
 
         <!-- Right side columns -->
         <div class="col-lg-4">
 
+          <!-- Status Ekskusi TIF -->
           <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Doughnut Chart</h5>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Status Ekskusi TIF <br>
+                <span>{{ $nasabah->first()->document->NamaFile }}</span>
+              </h5>
 
               <!-- Doughnut Chart -->
-              <canvas id="doughnutChart" style="max-height: 400px;"></canvas>
+              <canvas id="doughnutChart" style="max-height: 250px;" class="mb-4"></canvas>
+
               <script>
                 document.addEventListener("DOMContentLoaded", () => {
-                  const data = JSON.parse(`<?php echo $status ?>`)
+                  const data = JSON.parse(`<?php echo $statusTIF ?>`)
                   new Chart(document.querySelector('#doughnutChart'), {
                     type: 'doughnut',
                     data: {
                       labels: [
-                        'Sesuai',
-                        'Modifikasi',
+                        data.label[0],
+                        data.label[1],
                       ],
                       datasets: [{
-                        label: [
-                        ],
                         data: [
                           data.data[0],
                           data.data[1],
@@ -255,6 +216,7 @@
                         backgroundColor: [
                           'rgb(255, 99, 132)',
                           'rgb(54, 162, 235)',
+                          'rgb(255, 205, 86)'
                         ],
                         hoverOffset: 4
                       }]
@@ -265,48 +227,54 @@
               <!-- End Doughnut CHart -->
 
             </div>
-          </div>
+          </div><!-- End Status Ekskusi TIF -->
 
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Polar Area Chart</h5>
+          <!-- Status Penyesuaian -->
+          <div class="card">
 
-                <!-- Polar Area Chart -->
-                <canvas id="polarAreaChart" style="max-height: 400px;"></canvas>
-                <script>
-                  document.addEventListener("DOMContentLoaded", () => {
-                    const data = JSON.parse(`<?php echo $statusPembiayaan ?>`)
-                    new Chart(document.querySelector('#polarAreaChart'), {
-                      type: 'polarArea',
-                      data: {
-                        labels: [
-                          data.label[0],
-                          data.label[1],
-                          data.label[2],
+            <div class="card-body pb-0">
+              <h5 class="card-title">Status Penyesuaian <br>
+                <span>{{ $nasabah->first()->document->NamaFile }}</span>
+              </h5>
+
+              <!-- Polar Area Chart -->
+              <canvas id="polarAreaChart" style="max-height: 400px;" class="mb-3"></canvas>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  const data = JSON.parse(`<?php echo $statusPembiayaan ?>`)
+                  new Chart(document.querySelector('#polarAreaChart'), {
+                    type: 'polarArea',
+                    data: {
+                      labels: [
+                        data.label[0],
+                        data.label[1],
+                        data.label[2],
+                      ],
+                      datasets: [{
+                        label: [
+
                         ],
-                        datasets: [{
-                          label: [],
-                          data: [
-                            data.data[0],
-                            data.data[1],
-                            data.data[2],
-                          ],
-                          backgroundColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(75, 192, 192)',
-                            'rgb(54, 162, 235)'
-                          ]
-                        }]
-                      }
-                    });
+                        data: [
+                          data.data[0],
+                          data.data[1],
+                          data.data[2],
+                        ],
+                        backgroundColor: [
+                          'rgb(255, 99, 132)',
+                          'rgb(75, 192, 192)',
+                          'rgb(255, 205, 86)',
+                          'rgb(201, 203, 207)',
+                          'rgb(54, 162, 235)'
+                        ]
+                      }]
+                    }
                   });
-                </script>
-                <!-- End Polar Area Chart -->
+                });
+              </script>
+              <!-- End Polar Area Chart -->
 
-              </div>
             </div>
-          </div>
+          </div><!-- End Status Penyesuaian -->
 
         </div><!-- End Right side columns -->
 
@@ -314,4 +282,18 @@
     </section>
 
   </main><!-- End #main -->
+
+  <!-- DATATABLES -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap5.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#dtable').DataTable({
+        rowReorder: true,
+        pages: 5
+      });
+    });
+  </script>
 @endsection

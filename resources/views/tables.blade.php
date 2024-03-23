@@ -22,7 +22,6 @@
                   <th>#</th>
                   <th>ID Nasabah</th>
                   <th>ID Loan</th>
-                  <th>Nama File</th>
                   <th>Siklus</th>
                   <th>Status Eksekusi TIF</th>
                   <th>Status Penyesuaian</th>
@@ -34,12 +33,25 @@
                   @foreach($nasabah as $klien)
                     <tr>
                       <th scope="row">{{ $klien->id }}</th>
-                      <th scope="row"><a href="#">{{ $klien->NasabahId }}</a></th>
+                      <th scope="row"><a href="/nasabah/{{ $klien->NasabahId }}">{{ $klien->NasabahId }}</a></th>
                       <td>{{ $klien->LoanId }}</td>
-                      <td>{{ $klien->NamaFile }}</td>
                       <td>{{ $klien->Siklus }}</td>
-                      <td><span class="badge bg-primary">{{ $klien->StatusEksekusiTIF }}</span></td>
-                      <td><span class="badge bg-primary">{{ $klien->Status }}</span></td>
+                      <td>
+                        @if($klien->StatusEksekusiTIF == "Sesuai")
+                          <span class="badge bg-success">{{ $klien->StatusEksekusiTIF }}</span>
+                        @elseif($klien->StatusEksekusiTIF == "Modifikasi")
+                          <span class="badge bg-warning">{{ $klien->StatusEksekusiTIF }}</span>
+                        @endif
+                      </td>
+                      <td>
+                        @if($klien->Status == "Masih Ada Jadwal")
+                          <span class="badge bg-primary">{{ $klien->Status }}</span>
+                        @elseif($klien->Status == "Pembiayaan Lunas")
+                          <span class="badge bg-success">{{ $klien->Status }}</span>
+                        @elseif($klien->Status == "Tidak Ada Jadwal")
+                          <span class="badge bg-secondary">{{ $klien->Status }}</span>
+                        @endif
+                      </td>
                       <td><a>{{ $klien->StartingDateGP }}</a></td>
                       <td><a>{{ $klien->EndDateGP }}</a></td>
                     </tr>
@@ -72,12 +84,17 @@
                     <tbody>
                     @foreach($dokumen as $doc)
                     <tr>
-                      <th scope="row">{{ $doc->Id }}</th>
-                      <th scope="row"><a href="#">{{ $klien->NamaFile }}</a></th>
+                      <th scope="row">{{ $doc->id }}</th>
+                      <th scope="row">{{ $doc->NamaFile }}</th>
                       <td>{{ $doc->NoMemoAsal }}</td>
-                      <td>{{ $doc->NoTiket }}</td>
                       <td>{{ $doc->NoMemoOBS }}</td>
-                      <td><span class="badge bg-primary">{{ $doc->StatusTiket }}</span></td>
+                      <td>{{ $doc->NoTiket }}</td>
+                      <td>
+                        @if($doc->StatusTiket == 'Belum Kirim Ticket')
+                          <span class="badge bg-secondary">{{ $doc->StatusTiket }}</span>
+                        @elseif($doc->StatusTiket == 'Sudah Kirim Ticket')
+                          <span class="badge bg-success"> {{ $doc->StatusTiket }}</span>
+                      @endif</td>
                       <td>{{ $doc->JenisGP }}</td>
                     </tr>
                     @endforeach

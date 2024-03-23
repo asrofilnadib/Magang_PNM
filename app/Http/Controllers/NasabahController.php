@@ -6,58 +6,107 @@ use App\Models\Documents;
 use App\Models\Nasabah;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use function Laravel\Prompts\select;
 
 class NasabahController extends Controller
 {
-  public $nasabah;
-
-  public function index()
+  public function index(Request $request)
   {
-    $nasabah = Nasabah::whereIn('StatusEksekusiTIF', ['Sesuai', 'Modifikasi'])
-      ->latest()
-      ->limit(20)
-      ->get();
+    $namaFile = $request->input('nama_file');
 
-    $this->nasabah = $this->statusEksekusiTIF($nasabah);
-    $status = $this->polarAreaChart($nasabah);
-    $filter = $this->filterData(request());
-//        dd($this->nasabah);
-    return view('home', [
-      'status' => $this->nasabah,
-      'sumNasabah' => Nasabah::count(),
-      'nasabah' => Nasabah::all(),
-      'statusPembiayaan' => $status,
-      'filters' => $filter,
-    ]);
-  }
+    $from = $request->input('from', Nasabah::min('startingDateGP'));
+    $to = $request->input('to', Nasabah::max('endDateGP'));
 
-  public function tableNasabah()
-  {
-    return view('tables', [
-      'nasabah' => Nasabah::all(),
-      'dokumen' => Documents::all()
-    ]);
-  }
+    if ($namaFile) {
+      /*$nasabah = Nasabah::where('namaFile_id', $namaFile)
+      ->where(function ($query) use ($from, $to) {
+      $query->where('startingDateGP', '>=', $from)
+      ->where('endDateGP', '<=', $to);
+      })->get();*/
 
-  public function statusEksekusiTIF($nasabah)
-  {
-    $sesuai = 0;
-    $modifikasi = 0;
+      if ($namaFile == 'Semua File') {
+        $nasabah = Nasabah::query();
 
-    foreach ($nasabah as $klien) {
-      if ($klien->StatusEksekusiTIF == 'Sesuai') {
-        $sesuai++;
-      } elseif ($klien->StatusEksekusiTIF == 'Modifikasi') {
-        $modifikasi++;
+        if ($from) {
+          $nasabah->where('startingDateGP', '>=', $from);
+        }
+        if ($to) {
+          $nasabah->where('endDateGP', '<=', $to);
+        }
+        $nasabah = $nasabah->get();
+
+      } else {
+        $nasabah = Nasabah::query();
+        $nasabah->where('namaFile_id', $namaFile);
+        if ($from) {
+          $nasabah->where('startingDateGP', '>=', $from);
+        }
+        if ($to) {
+          $nasabah->where('endDateGP', '<=', $to);
+        }
+        $nasabah = $nasabah->get();
       }
+    } else {
+      $nasabah = Nasabah::all();
     }
 
-    $data = [
-      'label' => ['Sesuai', 'Modifikasi'],
-      'data' => [$sesuai, $modifikasi],
+
+//    dd($nasabah);
+
+    $sesuai = $nasabah->where('StatusEksekusiTIF', 'Sesuai')->count();
+    $modifikasi = $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->count();
+
+    $tidakAdaJadwal = $nasabah->where('Status', 'Tidak Ada Jadwal')->count();
+    $masihAdaJadwal = $nasabah->where('Status', 'Masih Ada Jadwal')->count();
+    $pembiayaanLunas = $nasabah->where('Status', 'Pembiayaan Lunas')->count();
+
+    $statusPembiayaan = [
+      'Tidak Ada Jadwal' => $tidakAdaJadwal,
+      'Masih Ada Jadwal' => $masihAdaJadwal,
+      'Pembiayaan Lunas' => $pembiayaanLunas,
     ];
 
-    return json_encode($data);
+    $statusTIFPembiayaan = [
+      [
+        'Tidak' => [
+          'sesuai' => $nasabah->where('StatusEksekusiTIF', 'Sesuai')->where('Status', 'Tidak Ada Jadwal')->count(),
+          'modifikasi' => $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->where('Status', 'Tidak Ada Jadwal')->count(),
+        ],
+        'Masih' => [
+          'sesuai' => $nasabah->where('StatusEksekusiTIF', 'Sesuai')->where('Status', 'Masih Ada Jadwal')->count(),
+          'modifikasi' => $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->where('Status', 'Masih Ada Jadwal')->count(),
+        ],
+        'Pembiayaan' => [
+          'sesuai' => $nasabah->where('StatusEksekusiTIF', 'Sesuai')->where('Status', 'Pembiayaan Lunas')->count(),
+          'modifikasi' => $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->where('Status', 'Pembiayaan Lunas')->count(),
+        ]
+      ]
+    ];
+
+//    dd($statusTIFPembiayaan);
+
+    return view('home', [
+      'statusTIF' => json_encode([
+        'label' => ['Sesuai', 'Modifikasi'],
+        'data' => [$sesuai, $modifikasi]
+      ]),
+      'statusPembiayaan' => json_encode([
+        'label' => ['Tidak Ada Jadwal', 'Masih Ada Jadwal', 'Pembiayaan Lunas'],
+        'data' => [$tidakAdaJadwal, $masihAdaJadwal, $pembiayaanLunas]
+      ]),
+      'nasabah' => $nasabah,
+      'sumNasabah' => $nasabah->count(),
+      'statusTIFPembiayaan' => json_encode($statusTIFPembiayaan),
+      'statusPembiayaaan' => json_encode($statusPembiayaan),
+      'doc180' => Documents::findOrFail(180),
+      'doc204' => Documents::findOrFail(204),
+    ]);
+
+    /*$nasabah = Nasabah::whereIn('StatusEksekusiTIF', ['Sesuai', 'Modifikasi'])
+      ->latest()
+      ->limit(20)
+      ->get();*/
   }
 
   public function show($idNasabah)
@@ -69,62 +118,11 @@ class NasabahController extends Controller
     ]);
   }
 
-  public function polarAreaChart($nasabah)
+  public function tableNasabah()
   {
-    $tidakAdaJadwal = 0;
-    $masihAdaJadwal = 0;
-    $pembiayaanLunas = 0;
-
-    foreach ($nasabah as $klien) {
-      if ($klien->Status == 'Tidak Ada Jadwal') {
-        $tidakAdaJadwal++;
-      } elseif ($klien->Status == 'Masih Ada Jadwal') {
-        $masihAdaJadwal++;
-      } elseif ($klien->Status == 'Pembiayaan Lunas') {
-        $pembiayaanLunas++;
-      }
-    }
-
-    $data = [
-      'label' => ['Tidak Ada Jadwal', 'Masih Ada Jadwal', 'Pembiayaan Lunas'],
-      'data' => [$tidakAdaJadwal, $masihAdaJadwal, $pembiayaanLunas],
-    ];
-
-    return json_encode($data);
-  }
-
-  public function filterData(Request $request)
-  {
-    // Mendapatkan nilai filter dari request
-    $filter = $request->input('filter');
-    $from = $request->input('from');
-    $to = $request->input('to');
-
-    // Query data berdasarkan filter
-    $query = Documents::query();
-
-    // Jika filter nama file tidak kosong, tambahkan kondisi pencarian berdasarkan nama file
-    if (!empty($filter)) {
-      $query->where('NamaFile', $filter);
-    }
-
-    // Jika tanggal dari tidak kosong, tambahkan kondisi pencarian berdasarkan starting date
-    if (!empty($from)) {
-      $query->where('StartingDateGP', '>=', $from);
-    }
-
-    // Jika tanggal sampai tidak kosong, tambahkan kondisi pencarian berdasarkan end date
-    if (!empty($to)) {
-      $query->where('EndDateGP', '<=', $to);
-    }
-
-    // Eksekusi query dan ambil data yang sesuai dengan filter
-    $filteredData = $query->get();
-
-    // Kemudian lakukan apa yang diperlukan dengan data yang telah difilter
-    // Misalnya, kirim data ke view atau lakukan manipulasi data lainnya
-
-    // Contoh: kirim data ke view
-    return json_encode($filteredData);
+    return view('tables', [
+      'nasabah' => Nasabah::all(),
+      'dokumen' => Documents::all(),
+    ]);
   }
 }

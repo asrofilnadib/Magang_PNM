@@ -69,7 +69,7 @@ class DocumentsFactory extends Factory
             'NoMemoOBS' => $this->faker->numerify('M-####/PNM-' . $NoMemoAsal1 . '/' . $Romawi . '/' . $Years),
             'PerihalMemoOBS' => 'Pengajuan Grace Period Kondisi Tertentu ' . $PerihalMemoOBS1 . $PerihalMemoOBS,
             'NoTiket' => $this->faker->numerify('T-###-PNM'),
-            'StatusTiket' => 'Belum Kirim Ticket',
+            'StatusTiket' => $this->faker->randomElement(['Belum Kirim Ticket', 'Sudah Kirim Ticket']),
             'JenisGP' => $this->faker->randomElement(['bencana', 'bencana', 'bencana', 'bencana', 'bencana', 'hari raya', 'covid']),
         ];
     }

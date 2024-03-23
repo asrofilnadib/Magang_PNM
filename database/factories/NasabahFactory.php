@@ -27,9 +27,9 @@ class NasabahFactory extends Factory
             'Siklus' => $this->faker->numberBetween(1, 6),
             'TanggalPencairan' => $this->faker->dateTimeBetween('2019-01-01', '2023-12-31')->format('Y-m-d'),
             'TanggalPencairanValue' => $this->faker->dateTimeBetween('2019-01-01', '2023-12-31')->format('Y-m-d'),
-            'NamaFile' => $this->faker->randomElement([$nasabah1->NamaFile, $nasabah2->NamaFile]),
-            'StartingDateGP' => $this->faker->dateTimeBetween('2023-01-01', '2023-02-28')->format('Y-m-d'),
-            'EndDateGP' => $this->faker->dateTimeBetween('2023-01-01', '2023-02-28')->format('Y-m-d'),
+            'namaFile_id' => $this->faker->randomElement([$nasabah1, $nasabah2]),
+            'StartingDateGP' => $this->faker->dateTimeBetween('2022-01-01', '2023-12-31')->format('Y-m-d'),
+            'EndDateGP' => $this->faker->dateTimeBetween('2023-01-01', today())->format('Y-m-d'),
             'StatusEksekusiTIF' => $this->faker->randomElement([
                 'Modifikasi',
                 'Sesuai'
