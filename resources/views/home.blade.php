@@ -1,4 +1,4 @@
-{{--@dd($nasabah->where('namaFile_id')->first()->StartingDateGP))--}}
+{{--@dd($namaFiles)--}}
 @extends('layouts.main')
 @section('content')
   <main id="main" class="main">
@@ -19,48 +19,55 @@
 
               <div class="card info-card customers-card">
 
-                  {{-- Form for Filtering --}}
+                {{-- Form for Filtering --}}
                 <div class="card-body">
-                    <form method="GET" action="{{ route('nasabah.index') }}">
-                      @csrf
-                      <div class="row">
-                        <div class="col-6">
-                          <h4 class="card-title">Tanggal Dari</h4>
-                          <input type="date" id="from" class="form-control" name="from" @if(request('nama_file'))
-                            value="{{ old('from', $nasabah->where('namaFile_id', request('nama_file'))->first()->StartingDateGP) }}"
+                  <form method="GET" action="{{ route('nasabah.index') }}">
+                    @csrf
+                    <div class="row">
+                      <div class="col-6 px-4 py-0">
+                        <h4 class="card-title-form">Tanggal Dari</h4>
+                        <input type="date" id="from" class="form-control" name="from"
+                               @if(request('nama_file'))
+                                 value="{{ old('from', request()->input('from')) }}" @else
+                                 value="{{ old('from')  }}"
                           @endif>
-                        </div>
-                        <div class="col-6">
-                          <h4 class="card-title">Tanggal Sampai</h4>
-                          <input type="date" id="to" class="form-control" name="to" @if(request('nama_file'))
-                            value="{{ old('to', $nasabah->first()->max('endDateGP')) }}"
-                            @endif>
-                        </div>
                       </div>
+                      <div class="col-6 px-4 py-0">
+                        <h4 class="card-title-form">Tanggal Sampai</h4>
+                        <input type="date" id="to" class="form-control" name="to"
+                               @if(request('nama_file'))
+                                 value="{{ old('to', request()->input('to')) }}" @else
+                                 value="{{ old('to') }}"
+                          @endif>
+                      </div>
+                    </div>
 
-                      <div class="row">
-                          <h4 class="card-title">Nama File</h4>
-                          <div class="col">
-                            <select class="form-select" aria-label="Nama File" name="nama_file"
-                                    required>
-                              <option selected >Semua File</option>
-                              <option
-                                value="{{ $doc180->id }}"> {{ $doc180->NamaFile }}</option>
-                              <option value="{{ $doc204->id }}"> {{ $doc204->NamaFile }}</option>
-                            </select>
-                          </div>
+                    <div class="row px-3 py-2">
+                      <h4 class="card-title-form">Nama File</h4>
+                      <div class="col">
+                        <select class="form-select" aria-label="Nama File" name="nama_file"
+                                required>
+                          <option value="semua_file" selected>Semua File</option>
+                          @foreach($namaFiles as $namaFile)
+                            <option value="{{ $namaFile->namaFile_id }}">{{ $namaFile->document->NamaFile }}</option>
+                          @endforeach{{--
+                          <option
+                            value="{{ $doc180->id }}"> {{ $doc180->NamaFile }}</option>
+                          <option value="{{ $doc204->id }}"> {{ $doc204->NamaFile }}</option>--}}
+                        </select>
                       </div>
+                    </div>
 
-                      <div class="row">
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                          <button type="submit" name="search"
-                                  class="btn btn-dark d-md-flex justify-content-md-end"><i
-                              class="bi bi-search me-1"></i> Search
-                          </button>
-                        </div>
+                    <div class="row">
+                      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button type="submit" name="search"
+                                class="btn btn-dark d-md-flex justify-content-md-end"><i
+                            class="bi bi-search me-1"></i> Search
+                        </button>
                       </div>
-                    </form>
-                  </div>
+                    </div>
+                  </form>
+                </div>
               </div>
 
             </div><!-- End Filter Card -->
@@ -98,12 +105,12 @@
 
                   <script>
                     document.addEventListener("DOMContentLoaded", () => {
-                      const label = JSON.parse(`<?php echo $statusTIFPembiayaan?>`)
+                      const label = JSON.parse(`<?php echo $statusTIFPembiayaan ?>`)
                       const data = JSON.parse(`<?php echo $statusPembiayaan ?>`)
-                      console.log(label)
-                      console.log(data)
-
-                      console.log(data.label[0])
+                      // console.log(label)
+                      // console.log(data)
+                      //
+                      // console.log(data.label[0])
 
                       echarts.init(document.querySelector("#verticalBarChart")).setOption({
                         tooltip: {
@@ -112,6 +119,7 @@
                             type: 'shadow'
                           }
                         },
+                        color: ['#40A2E3', '#2FDD92'],
                         legend: {
                           data: ['Sesuai', 'Modifikasi']
                         },
@@ -192,39 +200,56 @@
 
             <div class="card-body pb-0">
               <h5 class="card-title">Status Ekskusi TIF <br>
-                <span>{{ $nasabah->first()->document->NamaFile }}</span>
+                <span>
+                  @if(request('nama_file'))
+                    {{ $nasabah->first()->document->NamaFile }}
+                  @endif
+                </span>
               </h5>
 
               <!-- Doughnut Chart -->
-              <canvas id="doughnutChart" style="max-height: 250px;" class="mb-4"></canvas>
+              <!-- Pie Chart -->
+              <div id="statusTIF"></div>
 
               <script>
                 document.addEventListener("DOMContentLoaded", () => {
                   const data = JSON.parse(`<?php echo $statusTIF ?>`)
-                  new Chart(document.querySelector('#doughnutChart'), {
-                    type: 'doughnut',
-                    data: {
-                      labels: [
-                        data.label[0],
-                        data.label[1],
-                      ],
-                      datasets: [{
-                        data: [
-                          data.data[0],
-                          data.data[1],
-                        ],
-                        backgroundColor: [
-                          'rgb(255, 99, 132)',
-                          'rgb(54, 162, 235)',
-                          'rgb(255, 205, 86)'
-                        ],
-                        hoverOffset: 4
-                      }]
-                    }
-                  });
+                  new ApexCharts(document.querySelector("#statusTIF"), {
+                    series: [
+                      data.data[0],
+                      data.data[1]
+                    ],
+                    chart: {
+                      width: 320,
+                      type: 'pie',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    legend: {
+                      show: true,
+                      position: 'top',
+                    },
+                    colors: ['#FF204E', '#008DDA'],
+                    responsive: [{
+                      breakpoint: 500,
+                      options: {
+                        chart: {
+                          width: 210
+                        },
+                        legend: {
+                          position: 'bottom'
+                        }
+                      }
+                    }],
+                    labels: [
+                      data.label[0],
+                      data.label[1],
+                    ]
+                  }).render();
                 });
               </script>
-              <!-- End Doughnut CHart -->
+              <!-- End Pie Chart -->
 
             </div>
           </div><!-- End Status Ekskusi TIF -->
@@ -233,45 +258,55 @@
           <div class="card">
 
             <div class="card-body pb-0">
-              <h5 class="card-title">Status Penyesuaian <br>
-                <span>{{ $nasabah->first()->document->NamaFile }}</span>
+              <h5 class="card-title">Status Pembiayaan <br>
+                <span>
+                  @if(request('nama_file'))
+                    {{ $nasabah->first()->document->NamaFile }}
+                  @endif
+                </span>
               </h5>
 
-              <!-- Polar Area Chart -->
-              <canvas id="polarAreaChart" style="max-height: 400px;" class="mb-3"></canvas>
+              <!-- Donut Chart -->
+              <div id="statusPembiayaan" class="my-4"></div>
               <script>
                 document.addEventListener("DOMContentLoaded", () => {
                   const data = JSON.parse(`<?php echo $statusPembiayaan ?>`)
-                  new Chart(document.querySelector('#polarAreaChart'), {
-                    type: 'polarArea',
-                    data: {
-                      labels: [
-                        data.label[0],
-                        data.label[1],
-                        data.label[2],
-                      ],
-                      datasets: [{
-                        label: [
+                  new ApexCharts(document.querySelector("#statusPembiayaan"), {
+                    series: [
+                      data.data[0],
+                      data.data[1],
+                      data.data[2]
+                    ],
+                    chart: {
+                      width: 320,
+                      type: 'donut',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    colors: ['#FF3F00', '#32E0C4', '#0D7377'],
+                    legend: {
+                      show: true,
+                      position: 'top',
 
-                        ],
-                        data: [
-                          data.data[0],
-                          data.data[1],
-                          data.data[2],
-                        ],
-                        backgroundColor: [
-                          'rgb(255, 99, 132)',
-                          'rgb(75, 192, 192)',
-                          'rgb(255, 205, 86)',
-                          'rgb(201, 203, 207)',
-                          'rgb(54, 162, 235)'
-                        ]
-                      }]
-                    }
-                  });
+                    },
+                    responsive: [{
+                      breakpoint: 500,
+                      options: {
+                        chart: {
+                          width: 210
+                        },
+                      }
+                    }],
+                    labels: [
+                      data.label[0],
+                      data.label[1],
+                      data.label[2],
+                    ]
+                  }).render();
                 });
               </script>
-              <!-- End Polar Area Chart -->
+              <!-- End Donut Chart -->
 
             </div>
           </div><!-- End Status Penyesuaian -->

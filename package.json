@@ -16,6 +16,7 @@
         "vite": "^5.1.6"
     },
     "dependencies": {
+        "apexcharts": "^3.48.0",
         "chosen-js": "^1.8.7"
     }
 }
