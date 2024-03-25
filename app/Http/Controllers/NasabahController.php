@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Documents;
 use App\Models\Nasabah;
+use http\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 use function Laravel\Prompts\select;
+use Illuminate\Database\QueryException;
 
 class NasabahController extends Controller
 {
@@ -61,12 +64,6 @@ class NasabahController extends Controller
     $masihAdaJadwal = $nasabah->where('Status', 'Masih Ada Jadwal')->count();
     $pembiayaanLunas = $nasabah->where('Status', 'Pembiayaan Lunas')->count();
 
-    $statusPembiayaan = [
-      'Tidak Ada Jadwal' => $tidakAdaJadwal,
-      'Masih Ada Jadwal' => $masihAdaJadwal,
-      'Pembiayaan Lunas' => $pembiayaanLunas,
-    ];
-
     $statusTIFPembiayaan = [
       [
         'Tidak' => [
@@ -84,6 +81,10 @@ class NasabahController extends Controller
       ]
     ];
 
+    if ($nasabah->isEmpty()) {
+      Alert::warning('', 'Data tidak ditemukan');
+    }
+
 //    dd($statusTIFPembiayaan);
 
     return view('home', [
@@ -98,7 +99,6 @@ class NasabahController extends Controller
       'nasabah' => $nasabah,
       'sumNasabah' => $nasabah->count(),
       'statusTIFPembiayaan' => json_encode($statusTIFPembiayaan),
-      'statusPembiayaaan' => json_encode($statusPembiayaan),
       'namaFiles' => Nasabah::select('namaFile_id')->distinct()->get(),
     ]);
 
@@ -123,5 +123,10 @@ class NasabahController extends Controller
       'nasabah' => Nasabah::all(),
       'dokumen' => Documents::all(),
     ]);
+  }
+
+  private function isStartingDateGPExist($startingDate)
+  {
+    return Nasabah::where('startingDateGP', '<=', $startingDate)->exists();
   }
 }

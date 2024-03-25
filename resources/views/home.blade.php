@@ -1,6 +1,7 @@
-{{--@dd($namaFiles)--}}
+{{--@dd(\App\Models\Nasabah::min('startingDateGP'))--}}
 @extends('layouts.main')
 @section('content')
+  @include('sweetalert::alert')
   <main id="main" class="main">
 
     <div class="pagetitle mb-4">
@@ -22,7 +23,7 @@
                 {{-- Form for Filtering --}}
                 <div class="card-body">
                   <form method="GET" action="{{ route('nasabah.index') }}">
-                    @csrf
+{{--                    @csrf--}}
                     <div class="row">
                       <div class="col-6 px-4 py-0">
                         <h4 class="card-title-form">Tanggal Dari</h4>
@@ -201,7 +202,7 @@
             <div class="card-body pb-0">
               <h5 class="card-title">Status Ekskusi TIF <br>
                 <span>
-                  @if(request('nama_file'))
+                  @if(request('nama_file') && $nasabah->isNotEmpty() && $nasabah->first()->StartingDateGP >= request('from') )
                     {{ $nasabah->first()->document->NamaFile }}
                   @endif
                 </span>
@@ -260,7 +261,7 @@
             <div class="card-body pb-0">
               <h5 class="card-title">Status Pembiayaan <br>
                 <span>
-                  @if(request('nama_file'))
+                  @if(request('nama_file') && $nasabah->isNotEmpty() && $nasabah->first()->StartingDateGP >= request('from') )
                     {{ $nasabah->first()->document->NamaFile }}
                   @endif
                 </span>
