@@ -1,4 +1,4 @@
-{{--@dd(\App\Models\Nasabah::min('startingDateGP'))--}}
+{{--@dd($nasabah)--}}
 @extends('layouts.main')
 @section('content')
   @include('sweetalert::alert')
@@ -50,7 +50,7 @@
                                 required>
                           <option value="semua_file" selected>Semua File</option>
                           @foreach($namaFiles as $namaFile)
-                            <option value="{{ $namaFile->namaFile_id }}">{{ $namaFile->document->NamaFile }}</option>
+                            <option value="{{ $namaFile->NamaFile }}">{{ $namaFile->NamaFile }}</option>
                           @endforeach{{--
                           <option
                             value="{{ $doc180->id }}"> {{ $doc180->NamaFile }}</option>
@@ -203,7 +203,7 @@
               <h5 class="card-title">Status Ekskusi TIF <br>
                 <span>
                   @if(request('nama_file') && $nasabah->isNotEmpty() && $nasabah->first()->StartingDateGP >= request('from') )
-                    {{ $nasabah->first()->document->NamaFile }}
+                    {{ $nasabah->first()->NamaFile }}
                   @endif
                 </span>
               </h5>
@@ -215,6 +215,7 @@
               <script>
                 document.addEventListener("DOMContentLoaded", () => {
                   const data = JSON.parse(`<?php echo $statusTIF ?>`)
+                  // console.log(data)
                   new ApexCharts(document.querySelector("#statusTIF"), {
                     series: [
                       data.data[0],
@@ -262,7 +263,7 @@
               <h5 class="card-title">Status Pembiayaan <br>
                 <span>
                   @if(request('nama_file') && $nasabah->isNotEmpty() && $nasabah->first()->StartingDateGP >= request('from') )
-                    {{ $nasabah->first()->document->NamaFile }}
+                    {{ $nasabah->first()->NamaFile }}
                   @endif
                 </span>
               </h5>

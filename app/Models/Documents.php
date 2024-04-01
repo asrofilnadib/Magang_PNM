@@ -9,7 +9,7 @@ class Documents extends Model
 {
     use HasFactory;
 
-    protected $table = 'documents';
+    protected $table = 'dbo.m_GP';
 
     public function user()
     {

@@ -89,7 +89,7 @@
                     <label for="inputText" class="col-sm-2 col-form-label w-auto font-extralight text-sm italic">Nama File</label>
                   </div>
                   <div class="w-auto font-normal font-sans">
-                    {{ $nasabah->document->NamaFile }}
+                    {{ $nasabah->NamaFile }}
                   </div>
                 </div>
 

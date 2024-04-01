@@ -17,32 +17,32 @@
               <!-- Table with hoverable rows -->
               <div class="responsive">
                 <table class="table table-hover display" id="hoverTable">
-                <thead>
-                <tr>
-                  <th>#</th>
-                  <th>ID Nasabah</th>
-                  <th>ID Loan</th>
-                  <th>Siklus</th>
-                  <th>Status Eksekusi TIF</th>
-                  <th>Status Penyesuaian</th>
-                  <th>Starting Date GP</th>
-                  <th>End Gate GP</th>
-                </tr>
-                </thead>
-                <tbody>
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>ID Nasabah</th>
+                    <th>ID Loan</th>
+                    <th>Siklus</th>
+                    {{--<th>Status Eksekusi TIF</th>--}}
+                    <th>Status Penyesuaian</th>
+                    <th>Starting Date GP</th>
+                    <th>End Gate GP</th>
+                  </tr>
+                  </thead>
+                  <tbody>
                   @foreach($nasabah as $klien)
                     <tr>
-                      <th scope="row">{{ $klien->id }}</th>
+                      <th scope="row">{{ $loop->iteration }}</th>
                       <th scope="row"><a href="/nasabah/{{ $klien->NasabahId }}">{{ $klien->NasabahId }}</a></th>
                       <td>{{ $klien->LoanId }}</td>
                       <td>{{ $klien->Siklus }}</td>
-                      <td>
+                      {{--<td>
                         @if($klien->StatusEksekusiTIF == "Sesuai")
                           <span class="badge bg-success">{{ $klien->StatusEksekusiTIF }}</span>
                         @elseif($klien->StatusEksekusiTIF == "Modifikasi")
                           <span class="badge bg-warning">{{ $klien->StatusEksekusiTIF }}</span>
                         @endif
-                      </td>
+                      </td>--}}
                       <td>
                         @if($klien->Status == "Masih Ada Jadwal")
                           <span class="badge bg-primary">{{ $klien->Status }}</span>
@@ -56,7 +56,7 @@
                       <td><a>{{ $klien->EndDateGP }}</a></td>
                     </tr>
                   @endforeach
-                </tbody>
+                  </tbody>
                 </table>
               </div>
               <!-- End Table with hoverable rows -->
@@ -64,27 +64,27 @@
             </div>
           </div>
 
-      <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Tabel Nama File</h5>
-            <!-- Small tables -->
-            <div class="table-responsive">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Tabel Nama File</h5>
+              <!-- Small tables -->
+              <div class="table-responsive">
                 <table class="table table-sm display" id="smTable">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nama File</th>
-                            <th>No.Memo Asal</th>
-                            <th>No.Memo OBS</th>
-                            <th>No.Tiket</th>
-                            <th>Status Tiket</th>
-                            <th>Jenis GP</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($dokumen as $doc)
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nama File</th>
+                    <th>No.Memo Asal</th>
+                    <th>No.Memo OBS</th>
+                    <th>No.Tiket</th>
+                    <th>Status Tiket</th>
+                    <th>Jenis GP</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  @foreach($dokumen as $doc)
                     <tr>
-                      <th scope="row">{{ $doc->id }}</th>
+                      <th scope="row">{{ $doc->Id }}</th>
                       <th scope="row">{{ $doc->NamaFile }}</th>
                       <td>{{ $doc->NoMemoAsal }}</td>
                       <td>{{ $doc->NoMemoOBS }}</td>
@@ -92,32 +92,34 @@
                       <td>
                         @if($doc->StatusTiket == 'Belum Kirim Ticket')
                           <span class="badge bg-secondary">{{ $doc->StatusTiket }}</span>
-                        @elseif($doc->StatusTiket == 'Sudah Kirim Ticket')
+                        @elseif($doc->StatusTiket == 'Closed')
+                          <span class="badge bg-danger">{{ $doc->StatusTiket }}</span>
+                        @elseif($doc->StatusTiket == 'Open')
                           <span class="badge bg-success"> {{ $doc->StatusTiket }}</span>
-                      @endif</td>
+                        @endif</td>
                       <td>{{ $doc->JenisGP }}</td>
                     </tr>
-                    @endforeach
-                    </tbody>
+                  @endforeach
+                  </tbody>
                 </table>
+              </div>
+              <!-- End small tables -->
             </div>
-            <!-- End small tables -->
-        </div>
-    </div>
+          </div>
 
 
         </div>
       </div>
     </section>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   </main><!-- End #main -->
 
   <script>
-    $(document).ready( function () {
+    $(document).ready(function () {
       $('#hoverTable').DataTable();
       $('#smTable').DataTable({
-        'pageLength': 5,
       });
     });
   </script>

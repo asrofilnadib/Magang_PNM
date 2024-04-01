@@ -18,8 +18,8 @@ class NasabahController extends Controller
   {
     $namaFile = $request->input('nama_file');
 
-    $from = $request->input('from') ?? Nasabah::min('startingDateGP');
-    $to = $request->input('to') ?? Nasabah::max('endDateGP');
+    $from = $request->input('from') ?? Nasabah::min('StartingDateGP');
+    $to = $request->input('to') ?? Nasabah::max('EndDateGP');
 
     if ($namaFile) {
       /*$nasabah = Nasabah::where('namaFile_id', $namaFile)
@@ -32,21 +32,21 @@ class NasabahController extends Controller
         $nasabah = Nasabah::query();
 
         if ($from) {
-          $nasabah->where('startingDateGP', '>=', $from);
+          $nasabah->where('StartingDateGP', '>=', $from);
         }
         if ($to) {
-          $nasabah->where('endDateGP', '<=', $to);
+          $nasabah->where('EndDateGP', '<=', $to);
         }
         $nasabah = $nasabah->get();
 
       } else {
         $nasabah = Nasabah::query();
-        $nasabah->where('namaFile_id', $namaFile);
+        $nasabah->where('NamaFile', $namaFile);
         if ($from) {
-          $nasabah->where('startingDateGP', '>=', $from);
+          $nasabah->where('StartingDateGP', '>=', $from);
         }
         if ($to) {
-          $nasabah->where('endDateGP', '<=', $to);
+          $nasabah->where('EndDateGP', '<=', $to);
         }
         $nasabah = $nasabah->get();
       }
@@ -99,7 +99,7 @@ class NasabahController extends Controller
       'nasabah' => $nasabah,
       'sumNasabah' => $nasabah->count(),
       'statusTIFPembiayaan' => json_encode($statusTIFPembiayaan),
-      'namaFiles' => Nasabah::select('namaFile_id')->distinct()->get(),
+      'namaFiles' => Nasabah::select('NamaFile')->distinct()->get(),
     ]);
 
     /*$nasabah = Nasabah::whereIn('StatusEksekusiTIF', ['Sesuai', 'Modifikasi'])

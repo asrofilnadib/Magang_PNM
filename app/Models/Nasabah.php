@@ -9,7 +9,7 @@ class Nasabah extends Model
 {
     use HasFactory;
 
-    protected $table = 'nasabah';
+    protected $table = 'dbo.m_GPRMD_Check';
 
     public function user()
     {
