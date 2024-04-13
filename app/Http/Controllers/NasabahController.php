@@ -8,12 +8,15 @@ use http\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use MongoDB\BSON\Document;
 use RealRashid\SweetAlert\Facades\Alert;
 use function Laravel\Prompts\select;
 use Illuminate\Database\QueryException;
 
 class NasabahController extends Controller
 {
+  public $timestamps = false;
+
   public function index(Request $request)
   {
     $namaFile = $request->input('nama_file');
@@ -30,15 +33,13 @@ class NasabahController extends Controller
 
       if ($namaFile == 'semua_file') {
         $nasabah = Nasabah::query();
-
         if ($from) {
           $nasabah->where('StartingDateGP', '>=', $from);
         }
         if ($to) {
           $nasabah->where('EndDateGP', '<=', $to);
         }
-        $nasabah = $nasabah->get();
-
+        $nasabah = $nasabah->whereNotNull('StatusEksekusiTIF')->get();
       } else {
         $nasabah = Nasabah::query();
         $nasabah->where('NamaFile', $namaFile);
@@ -48,35 +49,133 @@ class NasabahController extends Controller
         if ($to) {
           $nasabah->where('EndDateGP', '<=', $to);
         }
-        $nasabah = $nasabah->get();
+        $nasabah = $nasabah->whereNotNull('StatusEksekusiTIF')->get();
       }
     } else {
-      $nasabah = Nasabah::all();
+      $nasabah = Nasabah::whereNotNull('StatusEksekusiTIF')->get();
     }
 
-
-//    dd($nasabah);
-
+    /* Kolom Status Eksekusi TIF */
     $sesuai = $nasabah->where('StatusEksekusiTIF', 'Sesuai')->count();
     $modifikasi = $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->count();
+    $layak = $nasabah->where('StatusEksekusiTIF', 'LAYAK')->count();
+    $layakTanpaPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->count();
+    $layakTanpaAdaPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->count();
+    $layakDenganPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->count();
 
+    /* Kolom Status Pembiayaan */
     $tidakAdaJadwal = $nasabah->where('Status', 'Tidak Ada Jadwal')->count();
     $masihAdaJadwal = $nasabah->where('Status', 'Masih Ada Jadwal')->count();
     $pembiayaanLunas = $nasabah->where('Status', 'Pembiayaan Lunas')->count();
 
+    /* Status TIF Pembiayaan
+        S = Sesuai
+        M = Modifikasi
+        L = Layak
+        LTP = Layak Tanpa Penyesuaian
+        LTAP = Layak Tanpa Ada Penyesuaian
+        LDP = Layak Dengan Penyesuaian
+    */
+    $tidakS = $nasabah->where('Status', 'Tidak Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'Sesuai')
+      ->select('Status')
+      ->count();
+    $tidakM = $nasabah->where('Status', 'Tidak Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'Modifikasi')
+      ->select('Status')
+      ->count();
+    $tidakL = $nasabah->where('Status', 'Tidak Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK')
+      ->select('Status')
+      ->count();
+    $tidakLTP = $nasabah->where('Status', 'Tidak Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK TANPA PENYESUAIAN')
+      ->select('Status')
+      ->count();
+    $tidakLTAP = $nasabah->where('Status', 'Tidak Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')
+      ->select('Status')
+      ->count();
+    $tidakLDP = $nasabah->where('Status', 'Tidak Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK DENGAN PENYESUAIAN')
+      ->select('Status')
+      ->count();
+
+    $masihS = $nasabah->where('Status', 'Masih Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'Sesuai')
+      ->select('Status')
+      ->count();
+    $masihM = $nasabah->where('Status', 'Masih Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'Modifikasi')
+      ->select('Status')
+      ->count();
+    $masihL = $nasabah->where('Status', 'Masih Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK')
+      ->select('Status')
+      ->count();
+    $masihLTP = $nasabah->where('Status', 'Masih Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK TANPA PENYESUAIAN')
+      ->select('Status')
+      ->count();
+    $masihLTAP = $nasabah->where('Status', 'Masih Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')
+      ->select('Status')
+      ->count();
+    $masihLDP = $nasabah->where('Status', 'Masih Ada Jadwal')
+      ->where('StatusEksekusiTIF', 'LAYAK DENGAN PENYESUAIAN')
+      ->select('Status')
+      ->count();
+
+    $pembiayaanS = $nasabah->where('Status', 'Pembiayaan Lunas')
+      ->where('StatusEksekusiTIF', 'Sesuai')
+      ->select('Status')
+      ->count();
+    $pembiayaanM = $nasabah->where('Status', 'Pembiayaan Lunas')
+      ->where('StatusEksekusiTIF', 'Modifikasi')
+      ->select('Status')
+      ->count();
+    $pembiayaanL = $nasabah->where('Status', 'Pembiayaan Lunas')
+      ->where('StatusEksekusiTIF', 'LAYAK')
+      ->select('Status')
+      ->count();
+    $pembiayaanLTP = $nasabah->where('Status', 'Pembiayaan Lunas')
+      ->where('StatusEksekusiTIF', 'LAYAK TANPA PENYESUAIAN')
+      ->select('Status')
+      ->count();
+    $pembiayaanLTAP = $nasabah->where('Status', 'Pembiayaan Lunas')
+      ->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')
+      ->select('Status')
+      ->count();
+    $pembiayaanLDP = $nasabah->where('Status', 'Pembiayaan Lunas')
+      ->where('StatusEksekusiTIF', 'LAYAK DENGAN PENYESUAIAN')
+      ->select('Status')
+      ->count();
+
     $statusTIFPembiayaan = [
       [
         'Tidak' => [
-          'sesuai' => $nasabah->where('StatusEksekusiTIF', 'Sesuai')->where('Status', 'Tidak Ada Jadwal')->count(),
-          'modifikasi' => $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->where('Status', 'Tidak Ada Jadwal')->count(),
+          'sesuai' => $tidakS,
+          'modifikasi' => $tidakM,
+          'layak' => $tidakL,
+          'layakTanpaPenyesuaian' => $tidakLTP,
+          'layakTanpaAdaPenyesuaian' => $tidakLTAP,
+          'layakDenganPenyesuaian' => $tidakLDP,
         ],
         'Masih' => [
-          'sesuai' => $nasabah->where('StatusEksekusiTIF', 'Sesuai')->where('Status', 'Masih Ada Jadwal')->count(),
-          'modifikasi' => $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->where('Status', 'Masih Ada Jadwal')->count(),
+          'sesuai' => $masihS,
+          'modifikasi' => $masihM,
+          'layak' => $masihL,
+          'layakTanpaPenyesuaian' => $masihLTP,
+          'layakTanpaAdaPenyesuaian' => $masihLTAP,
+          'layakDenganPenyesuaian' => $masihLDP,
         ],
         'Pembiayaan' => [
-          'sesuai' => $nasabah->where('StatusEksekusiTIF', 'Sesuai')->where('Status', 'Pembiayaan Lunas')->count(),
-          'modifikasi' => $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->where('Status', 'Pembiayaan Lunas')->count(),
+          'sesuai' => $pembiayaanS,
+          'modifikasi' => $pembiayaanM,
+          'layak' => $pembiayaanL,
+          'layakTanpaPenyesuaian' => $pembiayaanLTP,
+          'layakTanpaAdaPenyesuaian' => $pembiayaanLTAP,
+          'layakDenganPenyesuaian' => $pembiayaanLDP,
         ]
       ]
     ];
@@ -89,8 +188,8 @@ class NasabahController extends Controller
 
     return view('home', [
       'statusTIF' => json_encode([
-        'label' => ['Sesuai', 'Modifikasi'],
-        'data' => [$sesuai, $modifikasi]
+        'label' => ['Sesuai', 'Modifikasi', 'Layak', 'Layak Tanpa Ada Penyesuaian', 'Layak Tanpa Penyesuaian', 'Layak Dengan Penyesuaian'],
+        'data' => [$sesuai, $modifikasi, $layak, $layakTanpaAdaPenyesuaian, $layakTanpaPenyesuaian, $layakDenganPenyesuaian]
       ]),
       'statusPembiayaan' => json_encode([
         'label' => ['Tidak Ada Jadwal', 'Masih Ada Jadwal', 'Pembiayaan Lunas'],
@@ -99,7 +198,12 @@ class NasabahController extends Controller
       'nasabah' => $nasabah,
       'sumNasabah' => $nasabah->count(),
       'statusTIFPembiayaan' => json_encode($statusTIFPembiayaan),
-      'namaFiles' => Nasabah::select('NamaFile')->distinct()->get(),
+      'namaFiles' => Documents::select('a.NamaFile', 'b.Id')
+        ->from('m_GPRMD_Check_20240331 as a')
+        ->join('m_GP as b', 'a.NamaFile', '=', 'b.NamaFile')
+        ->where('Id', '>=', 216)
+        ->distinct()
+        ->get()
     ]);
 
     /*$nasabah = Nasabah::whereIn('StatusEksekusiTIF', ['Sesuai', 'Modifikasi'])
@@ -125,8 +229,12 @@ class NasabahController extends Controller
     ]);
   }
 
-  private function isStartingDateGPExist($startingDate)
+  private function executionTime($nasabah)
   {
-    return Nasabah::where('startingDateGP', '<=', $startingDate)->exists();
+    $start = microtime(true);
+    $count = $nasabah;
+    $end = microtime(true);
+
+    echo "Waktu Eksekusi: " . ($end - $start) . " detik";
   }
 }

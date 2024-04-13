@@ -19,8 +19,9 @@ return new class extends Migration
       $table->date('TanggalPencairan')->nullable();
       $table->date('TanggalPencairanValue')->nullable();
 //            $table->foreignId('idNamaFile')->constrained('documents');
-      $table->unsignedBigInteger('namaFile_id');
-      $table->foreign('namaFile_id')->references('id')->on('documents');
+      /*$table->unsignedBigInteger('namaFile_id');
+      $table->foreign('namaFile_id')->references('id')->on('documents');*/
+      $table->string('NamaFile', 255);
       $table->date('StartingDateGP')->nullable();
       $table->date('EndDateGP')->nullable();
       $table->string('StatusEksekusiTIF', 250);

@@ -21,13 +21,22 @@ class NasabahFactory extends Factory
     {
         $nasabah1 = Documents::findOrFail(180);
         $nasabah2 = Documents::findOrFail(204);
+        $nasabah3 = Documents::findOrFail(135);
+        $nasabah4 = Documents::findOrFail(383);
+        $nasabah5 = Documents::findOrFail(265);
         return [
             'NasabahId' => $this->faker->numerify('9185100####'),
             'LoanId' => $this->faker->numerify('91851##########'),
             'Siklus' => $this->faker->numberBetween(1, 6),
             'TanggalPencairan' => $this->faker->dateTimeBetween('2019-01-01', '2023-12-31')->format('Y-m-d'),
             'TanggalPencairanValue' => $this->faker->dateTimeBetween('2019-01-01', '2023-12-31')->format('Y-m-d'),
-            'namaFile_id' => $this->faker->randomElement([$nasabah1, $nasabah2]),
+            'NamaFile' => $this->faker->randomElement([
+              $nasabah1->NamaFile,
+              $nasabah2->NamaFile,
+              $nasabah3->NamaFile,
+              $nasabah4->NamaFile,
+              $nasabah5->NamaFile,
+            ]),
             'StartingDateGP' => $this->faker->dateTimeBetween('2022-01-01', '2023-12-31')->format('Y-m-d'),
             'EndDateGP' => $this->faker->dateTimeBetween('2023-01-01', today())->format('Y-m-d'),
             'StatusEksekusiTIF' => $this->faker->randomElement([

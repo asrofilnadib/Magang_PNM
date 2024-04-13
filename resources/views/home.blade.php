@@ -50,7 +50,7 @@
                                 required>
                           <option value="semua_file" selected>Semua File</option>
                           @foreach($namaFiles as $namaFile)
-                            <option value="{{ $namaFile->NamaFile }}">{{ $namaFile->NamaFile }}</option>
+                            <option value="{{ $namaFile->Namafile }}">{{ $namaFile->NamaFile }}</option>
                           @endforeach{{--
                           <option
                             value="{{ $doc180->id }}"> {{ $doc180->NamaFile }}</option>
@@ -108,6 +108,7 @@
                     document.addEventListener("DOMContentLoaded", () => {
                       const label = JSON.parse(`<?php echo $statusTIFPembiayaan ?>`)
                       const data = JSON.parse(`<?php echo $statusPembiayaan ?>`)
+                      const legend = JSON.parse(`<?php echo $statusTIF ?>`)
                       // console.log(label)
                       // console.log(data)
                       //
@@ -122,7 +123,14 @@
                         },
                         color: ['#40A2E3', '#2FDD92'],
                         legend: {
-                          data: ['Sesuai', 'Modifikasi']
+                          data: [
+                            legend.label[0],
+                            legend.label[1],
+                            legend.label[2],
+                            legend.label[3],
+                            legend.label[4],
+                            legend.label[5],
+                          ]
                         },
                         grid: {
                           left: '3%',
@@ -145,6 +153,9 @@
                               data.label[0],
                               data.label[1],
                               data.label[2],
+                              data.label[3],
+                              data.label[4],
+                              data.label[5],
                             ]
                           }
                         ],
@@ -219,7 +230,11 @@
                   new ApexCharts(document.querySelector("#statusTIF"), {
                     series: [
                       data.data[0],
-                      data.data[1]
+                      data.data[1],
+                      data.data[2],
+                      data.data[3],
+                      data.data[4],
+                      data.data[5],
                     ],
                     chart: {
                       width: 320,
@@ -232,7 +247,7 @@
                       show: true,
                       position: 'top',
                     },
-                    colors: ['#FF204E', '#008DDA'],
+                    colors: ['#FF204E', '#008DDA', '#90D26D', '#FF9800', '#9B4444'],
                     responsive: [{
                       breakpoint: 500,
                       options: {
@@ -247,6 +262,10 @@
                     labels: [
                       data.label[0],
                       data.label[1],
+                      data.label[2],
+                      data.label[3],
+                      data.label[4],
+                      data.label[5],
                     ]
                   }).render();
                 });
