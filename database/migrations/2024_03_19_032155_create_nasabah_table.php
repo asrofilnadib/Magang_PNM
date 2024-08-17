@@ -30,6 +30,7 @@ return new class extends Migration
       $table->date('EndDateGP_Penyesuaian')->nullable();
       $table->string('Status', 50);
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

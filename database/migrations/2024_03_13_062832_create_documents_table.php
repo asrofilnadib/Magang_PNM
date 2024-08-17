@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->string('StatusTiket', 255)->nullable();
             $table->string('JenisGP', 255)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         /*Schema::table('documents', function (Blueprint $table) {

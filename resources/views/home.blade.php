@@ -1,4 +1,4 @@
-{{--@dd($nasabah)--}}
+{{--@dd($namaFiles)--}}
 @extends('layouts.main')
 @section('content')
   @include('sweetalert::alert')
@@ -23,7 +23,7 @@
                 {{-- Form for Filtering --}}
                 <div class="card-body">
                   <form method="GET" action="{{ route('nasabah.index') }}">
-{{--                    @csrf--}}
+                    {{--                    @csrf--}}
                     <div class="row">
                       <div class="col-6 px-4 py-0">
                         <h4 class="card-title-form">Tanggal Dari</h4>
@@ -51,10 +51,7 @@
                           <option value="semua_file" selected>Semua File</option>
                           @foreach($namaFiles as $namaFile)
                             <option value="{{ $namaFile->Namafile }}">{{ $namaFile->NamaFile }}</option>
-                          @endforeach{{--
-                          <option
-                            value="{{ $doc180->id }}"> {{ $doc180->NamaFile }}</option>
-                          <option value="{{ $doc204->id }}"> {{ $doc204->NamaFile }}</option>--}}
+                          @endforeach
                         </select>
                       </div>
                     </div>
@@ -102,7 +99,7 @@
                   <h5 class="card-title">Status TIF X Status Pembiayaan</h5>
 
                   <!-- Vertical Bar Chart -->
-                  <div id="verticalBarChart" style="min-height: 300px;" class="echart"></div>
+                  <div id="verticalBarChart" style="min-height: 600px;" class="echart"></div>
 
                   <script>
                     document.addEventListener("DOMContentLoaded", () => {
@@ -121,16 +118,16 @@
                             type: 'shadow'
                           }
                         },
-                        color: ['#40A2E3', '#2FDD92'],
+                        color: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#17becf'],
                         legend: {
-                          data: [
+                          /*data: [
                             legend.label[0],
                             legend.label[1],
                             legend.label[2],
                             legend.label[3],
                             legend.label[4],
                             legend.label[5],
-                          ]
+                          ]*/
                         },
                         grid: {
                           left: '3%',
@@ -153,9 +150,6 @@
                               data.label[0],
                               data.label[1],
                               data.label[2],
-                              data.label[3],
-                              data.label[4],
-                              data.label[5],
                             ]
                           }
                         ],
@@ -165,7 +159,7 @@
                             type: 'bar',
                             label: {
                               show: true,
-                              position: 'inside'
+                              position: 'outside'
                             },
                             emphasis: {
                               focus: 'series'
@@ -179,9 +173,10 @@
                           {
                             name: 'Modifikasi',
                             type: 'bar',
-                            stack: 'Total',
+                            /*stack: 'Total',*/
                             label: {
-                              show: true
+                              show: true,
+                              position: 'outside',
                             },
                             emphasis: {
                               focus: 'series'
@@ -190,6 +185,73 @@
                               label[0].Tidak.modifikasi,
                               label[0].Masih.modifikasi,
                               label[0].Pembiayaan.modifikasi,
+                            ]
+                          },
+                          {
+                            name: 'Layak',
+                            type: 'bar',
+                            // stack: 'Total',
+                            label: {
+                              show: true,
+                              position: 'outside'
+                            },
+                            emphasis: {
+                              focus: 'series'
+                            },
+                            data: [
+                              label[0].Tidak.layak,
+                              label[0].Masih.layak,
+                              label[0].Pembiayaan.layak,
+                            ]
+                          },
+                          {
+                            name: 'Layak Tanpa Penyesuaian',
+                            type: 'bar',
+                            label: {
+                              show: true,
+                              position: 'outside'
+                            },
+                            emphasis: {
+                              focus: 'series'
+                            },
+                            data: [
+                              label[0].Tidak.layakTanpaPenyesuaian,
+                              label[0].Masih.layakTanpaPenyesuaian,
+                              label[0].Pembiayaan.layakTanpaPenyesuaian,
+                            ]
+                          },
+                          {
+                            name: 'Layak Tanpa Ada Penyesuaian',
+                            type: 'bar',
+                            // stack: 'Total',
+                            label: {
+                              show: true,
+                              position: 'outside'
+                            },
+                            emphasis: {
+                              focus: 'series'
+                            },
+                            data: [
+                              label[0].Tidak.layakTanpaAdaPenyesuaian,
+                              label[0].Masih.layakTanpaAdaPenyesuaian,
+                              label[0].Pembiayaan.layakTanpaAdaPenyesuaian,
+                            ]
+                          },
+                          {
+                            name: 'Layak Dengan Penyesuaian',
+                            type: 'bar',
+                            // stack: 'Total',
+                            label: {
+                              show: true,
+                              position: 'outside',
+                            },
+                            emphasis: {
+                              focus: 'series'
+                            },
+                            data: [
+                              label[0].Tidak.layakDenganPenyesuaian,
+                              label[0].Masih.layakDenganPenyesuaian,
+                              label[0].Pembiayaan.layakDenganPenyesuaian,
                             ]
                           },
                         ]
@@ -247,7 +309,7 @@
                       show: true,
                       position: 'top',
                     },
-                    colors: ['#FF204E', '#008DDA', '#90D26D', '#FF9800', '#9B4444'],
+                    colors: ['#FF204E', '#008DDA', '#90D26D', '#FF9800', '#9B4444', '#F6FB7A'],
                     responsive: [{
                       breakpoint: 500,
                       options: {

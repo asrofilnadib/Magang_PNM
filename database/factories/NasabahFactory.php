@@ -21,27 +21,25 @@ class NasabahFactory extends Factory
     {
         $nasabah1 = Documents::findOrFail(180);
         $nasabah2 = Documents::findOrFail(204);
-        $nasabah3 = Documents::findOrFail(135);
+        $nasabah3 = Documents::findOrFail(136);
         $nasabah4 = Documents::findOrFail(383);
-        $nasabah5 = Documents::findOrFail(265);
+        $nasabah5 = Documents::findOrFail(266);
         return [
             'NasabahId' => $this->faker->numerify('9185100####'),
             'LoanId' => $this->faker->numerify('91851##########'),
             'Siklus' => $this->faker->numberBetween(1, 6),
             'TanggalPencairan' => $this->faker->dateTimeBetween('2019-01-01', '2023-12-31')->format('Y-m-d'),
             'TanggalPencairanValue' => $this->faker->dateTimeBetween('2019-01-01', '2023-12-31')->format('Y-m-d'),
-            'NamaFile' => $this->faker->randomElement([
-              $nasabah1->NamaFile,
-              $nasabah2->NamaFile,
-              $nasabah3->NamaFile,
-              $nasabah4->NamaFile,
-              $nasabah5->NamaFile,
-            ]),
+            'NamaFile' => $this->faker->numberBetween(134, 406),
             'StartingDateGP' => $this->faker->dateTimeBetween('2022-01-01', '2023-12-31')->format('Y-m-d'),
             'EndDateGP' => $this->faker->dateTimeBetween('2023-01-01', today())->format('Y-m-d'),
             'StatusEksekusiTIF' => $this->faker->randomElement([
                 'Modifikasi',
-                'Sesuai'
+                'Sesuai',
+                'LAYAK',
+                'LAYAK TANPA PENYESUAIAN',
+                'LAYAK TANPA ADA PENYESUAIAN',
+                'LAYAK DENGAN PENYESUAIAN',
             ]),
             'DateEksekusiTIF' => $this->faker->date('Y-m-d'),
             'StartingDateGP_Penyesuaian' => $this->faker->dateTimeBetween('2022-01-01', '2022-12-31')->format('Y-m-d'),

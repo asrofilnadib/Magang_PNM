@@ -56,17 +56,17 @@ class NasabahController extends Controller
     }
 
     /* Kolom Status Eksekusi TIF */
-    $sesuai = $nasabah->where('StatusEksekusiTIF', 'Sesuai')->count();
-    $modifikasi = $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->count();
-    $layak = $nasabah->where('StatusEksekusiTIF', 'LAYAK')->count();
-    $layakTanpaPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->count();
-    $layakTanpaAdaPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->count();
-    $layakDenganPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->count();
+    $sesuai = $nasabah->where('StatusEksekusiTIF', 'Sesuai')->select('StatusEksekusiTIF')->count();
+    $modifikasi = $nasabah->where('StatusEksekusiTIF', 'Modifikasi')->select('StatusEksekusiTIF')->count();
+    $layak = $nasabah->where('StatusEksekusiTIF', 'LAYAK')->select('StatusEksekusiTIF')->count();
+    $layakTanpaPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->select('StatusEksekusiTIF')->count();
+    $layakTanpaAdaPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->select('StatusEksekusiTIF')->count();
+    $layakDenganPenyesuaian = $nasabah->where('StatusEksekusiTIF', 'LAYAK TANPA ADA PENYESUAIAN')->select('StatusEksekusiTIF')->count();
 
     /* Kolom Status Pembiayaan */
-    $tidakAdaJadwal = $nasabah->where('Status', 'Tidak Ada Jadwal')->count();
-    $masihAdaJadwal = $nasabah->where('Status', 'Masih Ada Jadwal')->count();
-    $pembiayaanLunas = $nasabah->where('Status', 'Pembiayaan Lunas')->count();
+    $tidakAdaJadwal = $nasabah->where('Status', 'Tidak Ada Jadwal')->select('Status')->count();
+    $masihAdaJadwal = $nasabah->where('Status', 'Masih Ada Jadwal')->select('Status')->count();
+    $pembiayaanLunas = $nasabah->where('Status', 'Pembiayaan Lunas')->select('Status')->count();
 
     /* Status TIF Pembiayaan
         S = Sesuai
@@ -198,10 +198,14 @@ class NasabahController extends Controller
       'nasabah' => $nasabah,
       'sumNasabah' => $nasabah->count(),
       'statusTIFPembiayaan' => json_encode($statusTIFPembiayaan),
-      'namaFiles' => Documents::select('a.NamaFile', 'b.Id')
+      /*'namaFiles' => Documents::select('a.NamaFile', 'b.Id')
         ->from('m_GPRMD_Check_20240331 as a')
         ->join('m_GP as b', 'a.NamaFile', '=', 'b.NamaFile')
         ->where('Id', '>=', 216)
+        ->distinct()
+        ->get()*/
+      'namaFiles' => Nasabah::select('NamaFile')
+        ->whereNotNull('StatusEksekusiTIF')
         ->distinct()
         ->get()
     ]);
